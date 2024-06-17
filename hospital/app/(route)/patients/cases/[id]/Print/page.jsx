@@ -114,82 +114,99 @@ const PrintPage = () => {
         {caseData ? (
           <div className=' text-primary'>
             <div className='flex items-center gap-10'>
-            
+
               <Image src='/logoS.png' alt='logo' width={100} height={100} />
               <h2 className='text-primary text-start font-bold text-xl'>ໂຮງຫມໍ ເສດຖາທິຣາດ <samp className='text-rose-700 font-bold '>+</samp>
 
 
                 <h2>Setthathirath Hospital</h2>
-                
-                </h2>
-                
+
+              </h2>
+
             </div>
             <div className='items-end'>
-                <h2 className="text-1xl text-end font-bold">ເລກທີ: <span className='text-rose-700 text-2xl  font-bold'>00{id}</span>/ສທຣ</h2>
-                </div>
-            <div style={{ backgroundColor: 'rgba(255, 255, 255, 0.8)', backdropFilter: 'blur(10px)' }} className='p-4 border mt-2 rounded-lg shadow-sm '>
+              <h2 className="text-1xl text-end font-bold">ເລກທີ: <span className='text-rose-700 text-2xl  font-bold'>00{id}</span>/ສທຣ</h2>
+            </div>
+            <div style={{
+              backgroundColor: 'rgba(255, 255, 255, 0.8)',
+              backdropFilter: 'blur(10px)',
+              width: '720px', // Set the desired width
+              height: '840px' // Set the desired height
+            }} className='p-4 border mt-2 rounded-lg shadow-sm'>
               <di className='items-strat text-1xl '>
                 <div className='text-start'>
-                <div className='grid grid-cols-2'>
-                <p><strong className='text-primary'>ຊື້:</strong> {caseData.attributes.patient_1_.data.attributes.first_name}</p>
-                <p><strong>ນາມສະກຸນ:</strong> {caseData.attributes.patient_1_.data.attributes.last_name}</p>
-                <p><strong>ເພດ:</strong> {caseData.attributes.patient_1_.data.attributes.gender}</p>
-                <p><strong>ເບີໂທ:</strong> {caseData.attributes.patient_1_.data.attributes.phone_number}</p>
-                <p><strong>ບ້ານ:</strong> {caseData.attributes.patient_1_.data.attributes.village}</p>
-                <p><strong>ເມືອງ:</strong> {caseData.attributes.patient_1_.data.attributes.district}</p>
-                <p><strong>ແຂວງ:</strong> {caseData.attributes.patient_1_.data.attributes.province}</p>
-                <p><strong>ປະເທດ:</strong> {caseData.attributes.patient_1_.data.attributes.country}</p>
-                <p><strong>Emergency Contact:</strong> {caseData.attributes.patient_1_.data.attributes.emergency_name} </p>
-                <p><strong>kk:</strong> {caseData.attributes.patient_1_.data.attributes.emergency_phone_number}</p>
-                <p><strong>Date of Birth:</strong> {caseData.attributes.patient_1_.data.attributes.date_of_birth}</p>
-                <p><strong>Insurance Name:</strong> {caseData.attributes.patient_1_.data.attributes.insurance_name}</p>
-                <p><strong>Insurance End Date:</strong> {caseData.attributes.patient_1_.data.attributes.insurance_end_date}</p>
-                <p><strong>ເອກະສານຍືນຍັນຕົວຕົນ:</strong> {caseData.attributes.patient_1_.data.attributes.identify_familybook_passport}</p>
-                {/* <p><strong>Payment Amount:</strong> {caseData.attributes.patient_1_.data.attributes.prayment_amount}</p> */}
-                {/* <p><strong>Payment Date:</strong> {caseData.attributes.patient_1_.data.attributes.prayment_date}</p> */}
-              </div>
-                  <h2 className='text-center text-rose-700 text-2xl  font-bold'>Case Information</h2>
-                  <div className='bg-gray-200 border-[1px] p-10 mt-6 rounded-lg'>
-                  <p><strong>Created At:</strong> {caseData.attributes.createdAt}</p>
+                  <div className='grid grid-cols-2'>
+                    <p><strong className='text-primary'>ຊື້:</strong> {caseData.attributes.patient_1_.data.attributes.first_name}</p>
+                    <p><strong>ນາມສະກຸນ:</strong> {caseData.attributes.patient_1_.data.attributes.last_name}</p>
+                    <p><strong>ເພດ:</strong> {caseData.attributes.patient_1_.data.attributes.gender}</p>
+                    <p><strong>ເບີໂທ:</strong> {caseData.attributes.patient_1_.data.attributes.phone_number}</p>
+                    <p><strong>ບ້ານ:</strong> {caseData.attributes.patient_1_.data.attributes.village}</p>
+                    <p><strong>ເມືອງ:</strong> {caseData.attributes.patient_1_.data.attributes.district}</p>
+                    <p><strong>ແຂວງ:</strong> {caseData.attributes.patient_1_.data.attributes.province}</p>
+                    <p><strong>ປະເທດ:</strong> {caseData.attributes.patient_1_.data.attributes.country}</p>
+                    <p><strong>Emergency Contact:</strong> {caseData.attributes.patient_1_.data.attributes.emergency_name} </p>
+                    <p><strong>kk:</strong> {caseData.attributes.patient_1_.data.attributes.emergency_phone_number}</p>
+                    <p><strong>Date of Birth:</strong> {caseData.attributes.patient_1_.data.attributes.date_of_birth}</p>
+                    <p><strong>Insurance Name:</strong> {caseData.attributes.patient_1_.data.attributes.insurance_name}</p>
+                    <p><strong>Insurance End Date:</strong> {caseData.attributes.patient_1_.data.attributes.insurance_end_date}</p>
+                    <p><strong>ເອກະສານຍືນຍັນຕົວຕົນ:</strong> {caseData.attributes.patient_1_.data.attributes.identify_familybook_passport}</p>
+                    {/* <p><strong>Payment Amount:</strong> {caseData.attributes.patient_1_.data.attributes.prayment_amount}</p> */}
+                    {/* <p><strong>Payment Date:</strong> {caseData.attributes.patient_1_.data.attributes.prayment_date}</p> */}
+                  </div>
+                  <h2 className='text-center text-rose-700 text-2xl  font-bold'>ຂໍ້ມູນການປີ້ນປົວ</h2>
 
-                  <p ><strong>Medical Detail:</strong> {caseData.attributes.medical_detail}</p>
-                  <p><strong>Symptom:</strong> {caseData.attributes.symptom}</p>
-                  <p><strong>Treatment:</strong> {caseData.attributes.treatment}</p>
-                  
-                  {/* <p><strong>Updated At:</strong> {caseData.attributes.updatedAt}</p> */}
+                  <div style={{
+
+                    backdropFilter: 'blur(10px)',
+                    width: '680px', // Set the desired width
+                    height: '438px' // Set the desired height
+                  }} className='bg-gray-200 border-[1px] p-10 mt-6 rounded-lg'>
+
+                    <p><strong>ວັນທີເຂົ້າຮັກສາ:</strong> {caseData.attributes.createdAt}</p>
+                    <p><strong>ອາການ:</strong><div>{caseData.attributes.symptom}</div> </p>
+                    <p><strong>ການປີ້ນປົວ:</strong> <div>{caseData.attributes.treatment}</div></p>
+                    <p ><strong>ຍາ ແລະ ອຸປະກອນ:</strong> <div>{caseData.attributes.medical_detail}</div></p>
+                    
+                    <div style={{
+                      marginTop: '190px', // Adjust this value to move the QR code down
+                      display: 'flex',
+                      justifyContent: 'flex-end', // Align to the right
+                      transform: 'scale(0.8)', // Scale down if necessary
+                      marginRight: '-115px' // Adjust this value to move the QR code to the right
+                    }}>
+                      <canvas ref={canvasRef} />
+                      <br>
+                      </br>
+                    </div>
+                    <p className="text-sm text-end text-primary">ວັນທີ: {currentDate} ນະຄອນຫຼວງວຽງຈັນ ສປປລາວ</p>
+
+                    {/* <p><strong>Updated At:</strong> {caseData.attributes.updatedAt}</p> */}
                   </div>
                 </div>
-                <div className='qr-code'>
 
-                  <canvas ref={canvasRef} />
-                  
-
-                </div>
-                <p className="text-sm text-end text-primary">ວັນທີ: {currentDate} ນະຄອນຫຼວງວຽງຈັນ ສປປລາວ</p>
-               
               </di>
-             
+
 
 
             </div>
-            <div className='text-center'>
-           
-                <span className=''>
-                  <h2 className=" text-gray-500">
+            <div className='text-center  '>
+
+              <span className=''>
+                <h2 className=" text-gray-500">
 
                   <br class="mb-2" />
                   ຖະນົນ ກຳແພງເມືອງ ບ້ານດອນກອຍ ເມືອງໄຊເສດຖາ ນະຄອນຫຼວງວຽງຈັນ
                   <br class="mb-2" />
-                 
+
                   ອີເມວ : hospitalsetthathirath@gmail.com
                   <br class="mb-2" />
                   ເບີ :030 5725978
-                  
+
                 </h2>
-                </span>
-              </div>
+              </span>
+            </div>
           </div>
-          
+
         ) : (
           <p>Loading case data...</p>
         )}
@@ -230,7 +247,7 @@ const PrintPage = () => {
           display: flex;
           justify-content: flex-end; /* Align to the left */
           transform: scale(0.8); /* Scale down if necessary */
-          margin-right: -70px; /* Adjust this value to move the QR code to the right */
+          margin-right: -80px; /* Adjust this value to move the QR code to the right */
              
         }
         @media print {
