@@ -1,7 +1,9 @@
+"use client"
+import React from 'react'
 import { Map } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'
-import React from 'react'
+
 
 function footer() {
   return (
@@ -23,7 +25,7 @@ function footer() {
           Mail : hospitalsetthathirath@gmail.com 
         </h2>
         <Link href='https://maps.app.goo.gl/dHXmWUFUTacNHDAt5'>
-        <h2 className='font-bold  text-center text-1xl tracking-wide'><samp className='text-primary'><Map /></samp> </h2>
+        <h2 className='font-bold  text-center text-3xl tracking-wide'><samp className='text-primary'><Map /></samp> </h2>
 </Link>
 
         {/* 

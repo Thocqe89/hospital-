@@ -5,7 +5,7 @@ import LoadingSpinner from '@/components/LoadingSpinner';
 import NoInternet from '@/components/NoInternet';
 
 const withGlobalState = (WrappedComponent) => {
-  return (props) => {
+  const WithGlobalState = (props) => {
     const { loading, isOnline } = useGlobalContext();
 
     if (!isOnline) {
@@ -18,6 +18,10 @@ const withGlobalState = (WrappedComponent) => {
 
     return <WrappedComponent {...props} />;
   };
+
+  WithGlobalState.displayName = `WithGlobalState(${WrappedComponent.displayName || WrappedComponent.name || 'Component'})`;
+
+  return WithGlobalState;
 };
 
 export default withGlobalState;

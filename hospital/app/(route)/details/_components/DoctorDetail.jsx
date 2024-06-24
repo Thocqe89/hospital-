@@ -1,15 +1,39 @@
-import React from 'react';
+"use client"
+import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
 import { BookOpenText, BriefcaseBusiness, ClipboardPlus, Earth, GraduationCap, MailCheck, MapPin, PhoneCall, PhoneForwarded, School, Stethoscope } from 'lucide-react';
 
 import BookAppointment from './BookAppointment';
+import { canAccess } from '@/lib/utils';
+import { useKindeBrowserClient } from '@kinde-oss/kinde-auth-nextjs';
+import GlobalApi from '@/app/_utils/GlobalApi';
 
 function DoctorDetail({doctor}) {
+  const { user } = useKindeBrowserClient();
+  const [emailData, setEmailData] = useState(null);
+  console.log(user);
+  
+  useEffect(() => {
+    if (user && user.email) {
+      // Fetch email data from the API when the component mounts
+      GlobalApi.getEmail(user.email)
+        .then(response => {
+          console.log('API Response:', response); // Log the entire response object
+          const emailList = response.data.data;
+          const foundEmail = emailList.find(item => item.attributes.email === user.email);
+          console.log(foundEmail);
+          setEmailData(foundEmail);
+        })
+        .catch(error => {
+          console.error('Error fetching email:', error);
+        });
+    }
+  }, [user]);
   return (
     <div className='grid grid-cols-2 bg-gray-200 md:grid-cols-2 border-[1px] p-5 mt-5 rounded-lg '>
   {/* image */}
       <div>
-      <img 
+      <Image 
   src={doctor.attributes?.image?.data?.[0]?.attributes?.url || '/82.jpg'} 
   alt={'Doctor'} 
   width={500}
@@ -58,7 +82,7 @@ function DoctorDetail({doctor}) {
         <span className='text-primary text-blod'>
            {doctor.attributes?.employees?.data[0]?.attributes?.name}</span>
            </h2>
-        <BookAppointment doctor={doctor} />
+           {emailData && canAccess("BokingButton", emailData.attributes.role_1.data.attributes.code) && <BookAppointment doctor={doctor} />}
       </div>
     </div>
   );

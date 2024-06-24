@@ -5,9 +5,8 @@ import GlobalApi from '@/app/_utils/GlobalApi'; // Import GlobalApi
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { toast } from 'sonner';
-import { Trash2, CheckCheck, CopyXIcon, CircleUserRound, Users } from 'lucide-react';
+import { Trash2, CheckCheck, CopyXIcon, CircleUserRound, Users, ClipboardPlus } from 'lucide-react';
 import Link from 'next/link';
-import { data } from 'autoprefixer';
 
 function EditUser({ params }) {
     const router = useRouter();
@@ -28,8 +27,13 @@ function EditUser({ params }) {
         experience_year: "",
         graduation_at: "",
         graduation_date: "",
-
+        employees: "",
+        role_1: ""
     });
+
+    const [employees, setEmployees] = useState([]);
+    const [roles, setRoles] = useState([]);
+
     useEffect(() => {
         if (id) {
             GlobalApi.getUserById(id)
@@ -40,6 +44,17 @@ function EditUser({ params }) {
                     console.error('Error fetching user data:', error);
                 });
         }
+        // Fetch employees and roles for the select options
+        GlobalApi.getEmployee()
+            .then(response => setEmployees(response.data.data))
+            .catch(error => console.error('Error fetching employees:', error));
+
+        GlobalApi.getrole()
+            .then((response) => {
+                console.log("=>", response);
+                return setRoles(response.data.data)
+            })
+            .catch(error => console.error('Error fetching roles:', error));
     }, [id]);
 
     const handleChange = (e) => {
@@ -51,35 +66,33 @@ function EditUser({ params }) {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-      
-            GlobalApi.updateUser(id,{ data: userData } )
-                .then(response => {
-                    console.log('User updated successfully:', response.data);
-                    toast.success('ບັນທຶກຂໍ້ມູນສຳເລັດກວດ !', { style: toastStyles.success });
-                    router.push('/users');
-                })
-                .catch(error => {
-                  console.error('Error updating User:', error);
-                  toast.error('ບັນທຶກຂໍ້ມູນບໍ່ສຳເລັດກວດຊອບການປ້ອນຂໍ້ມູນ !', { style: toastStyles.error });
-                });
-          
+
+        GlobalApi.updateUser(id, { data: userData })
+            .then(response => {
+                console.log('User updated successfully:', response.data);
+                toast.success('User updated successfully!', { style: toastStyles.success });
+                router.push('/users');
+            })
+            .catch(error => {
+                console.error('Error updating User:', error);
+                toast.error('Error updating user!', { style: toastStyles.error });
+            });
     };
 
     const handleDelete = () => {
-        if (confirm("ຕ້ອງການລືບຂໍ້ມູນນີ້ແທ້ບໍ?")) {
+        if (confirm("Are you sure you want to delete this user?")) {
             GlobalApi.deleteUser(id)
-            .then(response => {
-                console.log('Patient deleted successfully:', response.data);
-                toast.success('ລືບຂໍ້ມູນສຳເລັດກວດ !', { style: toastStyles.success });
-                router.push('/users');
-              })
-      
-              .catch(error => {
-                console.error('Error deleting patient:', error);
-                toast.error('ລົບຂໍ້ມູນບໍ່ສຳເລັດກວດຊອບການປ້ອນຂໍ້ມູນ !', { style: toastStyles.error });
-              });
-          }
-        };
+                .then(response => {
+                    console.log('User deleted successfully:', response.data);
+                    toast.success('User deleted successfully!', { style: toastStyles.success });
+                    router.push('/users');
+                })
+                .catch(error => {
+                    console.error('Error deleting user:', error);
+                    toast.error('Error deleting user!', { style: toastStyles.error });
+                });
+        }
+    };
 
     const toastStyles = {
         success: {
@@ -91,13 +104,14 @@ function EditUser({ params }) {
             color: 'white',
         },
     };
+
     return (
         <div className="grid grid-cols-2 bg-gray-200 md:grid-cols-3 border-[1px] p-5 mt-6 rounded-lg">
             <div className="col-span-3 mt-2 md:mt-0">
                 <form onSubmit={handleSubmit} className="space-y-2 text-primary">
                     <div className="grid gap-3 mb-2 md:grid-cols-2">
                         <h2 className='text-md mt-3 flex gap-1 text-primary '>
-                            <CircleUserRound className="text-primary" /> ຊື້
+                            <CircleUserRound className="text-primary" /> First Name
                         </h2>
                         <Input type="text" id="first_name" name="first_name" value={userData.first_name} onChange={handleChange} />
 
@@ -165,8 +179,44 @@ function EditUser({ params }) {
                             Graduation Date
                         </h2>
                         <Input type="date" id="graduation_date" name="graduation_date" value={userData.graduation_date} onChange={handleChange} />
+
+                        <h2 className='text-md flex gap-2 text-primary '>
+                            Employees
+                        </h2>
+                        <select id="employees" name="employees" value={userData.employees} onChange={handleChange} className="input input-bordered">
+                            <option value="">ເລືອກພະແນກ</option>
+                            {employees.map(employee => (
+                                <option key={employee.id} value={employee.id}>{employee.attributes.name}</option>
+                            ))}
+                        </select>
+
+                        <h2 className='text-md flex gap-2 text-primary '>
+                            Role
+                        </h2>
+                        <select id="role_1" name="role_1" value={userData.role_1} onChange={handleChange} className="input input-bordered">
+                            <option value="">ເລືອກຕຳແໜ່ງ</option>
+                            {roles.map(role => (
+                                <option key={role.id} value={role.id}>{role.attributes.display_name}</option>
+                            ))}
+                        </select>
+                        {/* <h2 className='text-md flex gap-2 text-primary '>
+            <ClipboardPlus className='text-primary'/>ຕຳແໜ່ງ
+            </h2>
+            <select
+              id="role_id"
+              name="role_1"
+              value={addUser.role_id}
+              onChange={handleChange}
+              className="w-full p-2 mt-1 border rounded"
+            >
+              <option value="">ເລືອກຕຳແໜ່ງ</option>
+              {roles.map(role => (
+                <option key={role.id} value={role.id}>{role.name}</option>
+              ))}
+            </select>  */}
                     </div>
-                    <div className="flex justify-end space-x-4">
+                    <div className="flex mt-2 justify-end space-x-4">
+
                         <Button
                             onClick={() => handleDelete(id)}
                             className="text-primary text-white px-4 py-2 rounded-md bg-red-500 hover:bg-red-600"
@@ -183,7 +233,7 @@ function EditUser({ params }) {
                             </div>
                         </Button>
 
-                        <Link href="/users" legacyBehavior>
+                        <Link href="/users/" legacyBehavior>
                             <a>
                                 <Button className="text-primary text-white px-4 py-2 rounded-md bg-gray-500 hover:bg-gray-900">
                                     <div className="flex items-center space-x-2">
@@ -194,7 +244,22 @@ function EditUser({ params }) {
                             </a>
                         </Link>
                     </div>
+
+                    {/* <div className="flex gap-2">
+                        <Button type="submit" className="btn btn-primary flex-1">
+                            <CheckCheck className="text-primary mr-1" /> ບັນທຶກ
+                        </Button>
+                        <Button type="button" onClick={handleDelete} className="btn btn-danger flex-1">
+                            <Trash2 className="text-primary mr-1" /> ລືບຂໍ້ມູນ
+                        </Button>
+                        <Link href="/users">
+                            <Button type="button" className="btn btn-secondary flex-1">
+                                <CopyXIcon className="text-primary mr-1" /> ຍົກເລິກ
+                            </Button>
+                        </Link>
+                    </div> */}
                 </form>
+
             </div>
         </div>
     );

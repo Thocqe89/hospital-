@@ -16,9 +16,29 @@ const getEmployee = () => axiosClient.get('employees?populate=*');
 
 const getDoctorlist = () => axiosClient.get('user-1s?populate=*');
 
+
+
+
+//  const getEmail = (email) => axiosClient.get(`user-1s?populate=*&filters[email][$in]=${email}`);
+
+ const getEmail = (email) => {
+    const encodedEmail = encodeURIComponent(email);
+    return axiosClient.get(`user-1s?populate=*&filters[email][$in]=${encodedEmail}`);
+  };
+
+// const getEmail = (email) => {
+//     const queryParams = new URLSearchParams({
+//       populate: '*',
+//       'filters[email][$in]': email
+//     });
+//     return axiosClient.get(`user-1s?${queryParams.toString()}`);
+//   };
+
+
 const getrole = () => axiosClient.get('role-1s?populate=*');
 const getcases = () => axiosClient.get('cases-1s?populate=*');
 const getcasesByUserId = (id) => axiosClient.get(`cases-1s?populate=*&filters[patient_1_][id][$eq]=${id}`);
+
 const getPatientByCaseId = (caseId) => axiosClient.get(`cases-1s/${caseId}?populate=patient_1_`);
 
 
@@ -52,14 +72,23 @@ const updateBookingStatus = (id, data) => axiosClient.patch(`/appointments/${id}
 const BookAppointment = (data) => axiosClient.post("/appointments/", data);
 
 const getBookedTimeSlots = (doctorId, date) =>
-    axiosClient.get(`/appointments?filters[doctor][id][$eq]=${doctorId}&filters[date][$eq]=${date.toISOString().split('T')[0]}&populate=*`);
+    axiosClient.get(`/appointments/`,doctorId, date);
 
-const getPatientCase = (id) => axiosClient.get(`/cases-1s/${id}`);
-const updateCase = (id, data) => axiosClient.put(`/cases-1s/${id}`, data);
-const getCaseById = (id) => axiosClient.get(`/cases-1s/${id}`);
+const getPatientCase = (id) => axiosClient.get(`/cases-1s/${id}?populate=*`);
+
+const updateCase = (id, caseData) => axiosClient.put(`/cases-1s/${id}`, caseData);
+
+
+const getCaseById = (id) => axiosClient.get(`/cases-1s/${id}?populate=*`);
 const deletecase = (id) => axiosClient.delete(`/cases-1s/${id}`);
+
+const postpayment = (id) => axiosClient.post(`/cases-1s/${id}`);
+
 const PostNewcasesing = (newcases) => axiosClient.post('/cases-1s', { data: newcases });
 
+
+
+const savepayments = (data) => axiosClient.post("/payments/", data);
 
 
 
@@ -85,6 +114,7 @@ const deleteUser = (id) => axiosClient.delete(`/user-1s/${id}`);
 const updateUser = (id, data) => axiosClient.put(`/user-1s/${id}`, data);
 const saveUser = (userData) => axiosClient.post('/user-1s', userData);
 const getUserById = (id) => axiosClient.get(`/user-1s/${id}`);
+
 
 
 // const getDoctorByCategory = (category) => {
@@ -128,6 +158,9 @@ export default {
     updateCase,
     getcasesByUserId,
     getCaseById,
-    deletecase
+    deletecase,
+    getEmail,
+    savepayments,
+    postpayment
     //getBookinglists
 }; 

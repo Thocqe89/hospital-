@@ -1,109 +1,114 @@
-"use client";
-import { useRouter} from 'next/navigation';
-import { useParams } from 'next/navigation';
+'use client';
 
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+import { useRouter } from 'next/navigation';
 import { Button } from "@/components/ui/button";
 import GlobalApi from '@/app/_utils/GlobalApi';
-import { Banknote, BookUser, CalendarCheck, CalendarDays, CalendarPlus, CalendarX2, CheckCheck, CircleUserRound, CopyX, CopyXIcon, Earth, HotelIcon, LucideHome, PhoneCall, PhoneForwarded, Radiation, School2, ShieldCheck, SquareUserRound, Trash2, Undo2, UserRoundSearch, Users } from 'lucide-react';
+import { Activity, Banknote, CheckCheck, CopyXIcon, Pill, Trash2 } from 'lucide-react';
 import { toast } from 'sonner';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
-// import { useRouter, useParams } from 'next/router';
+import { canAccess } from '@/lib/utils';
+import { useKindeBrowserClient } from '@kinde-oss/kinde-auth-nextjs';
 
-
-
-const EditPage = () => {
+const EditPage = ({ params }) => {
   const router = useRouter();
-  const { id } = router.query || {};
-
-  // const { id } = router.query || {}; // Handle undefined id gracefully
-  // console.log("Fetching case data for ID:", id);
-  // State variables to hold case data
-  // const id = params.edit;
+  const { id } = params;
+  const { user } = useKindeBrowserClient();
+  const [emailData, setEmailData] = useState(null);
   const [caseData, setCaseData] = useState({
-    symptom: '',
-    treatment: '',
-    medical_detail: '',
-  
+    data: {
+
+      symptom: '',
+      treatment: '',
+      medical_detail: '',
+      prayment_amount: '',
+
+    },
   });
-  console.log('=>7d:', caseData);
+
+  useEffect(() => {
+    if (user && user.email) {
+      GlobalApi.getEmail(user.email)
+        .then(response => {
+          const emailList = response.data.data;
+          const foundEmail = emailList.find(item => item.attributes.email === user.email);
+          setEmailData(foundEmail);
+        })
+        .catch(error => {
+          console.error('Error fetching email:', error);
+        });
+    }
+  }, [user]);
+
   useEffect(() => {
     if (id) {
-      // Fetch case data when id changes
       GlobalApi.getCaseById(id)
         .then(response => {
-          setCaseData(response.data.attributes);
+          setCaseData(response.data);
         })
         .catch(error => {
           console.error('Error fetching case data:', error);
         });
     }
   }, [id]);
-  // Function to fetch case data based on ID
-  // const fetchCaseData = async () => {
-  //   try {
-      
-  //     const response = await GlobalApi.getCaseById(id);
-  //     setCaseData(response.data); // Update state with case data
-  //   } catch (error) {
-  //     console.error('Error fetching case data:', error);
-  //   }
-  // };
 
-  // Fetch case data when component mounts
-  // useEffect(() => {
-  //   if (id) {
-  //     fetchCaseData();
-  //   }
-  // }, [id]);
-  const handleChange = (e) => {
-    setCaseData({
-      ...caseData,
-      [e.target.name]: e.target.value
-    });
+  const handleChange = (event) => {
+    const { name, value } = event.target;
+
+    // console.log('=> event.target', value);
+
+    setCaseData(prevState => ({
+      ...prevState,
+      data: {
+        ...prevState.data,
+        attributes: {
+          ...prevState.data.attributes,
+          [name]: value,
+        }
+      }
+    }));
   };
-  // Function to handle form submission
+
   const handleSubmit = (e) => {
     e.preventDefault();
-    GlobalApi.updateCase(id, { data: caseData })
+    // console.log('=> e', e.target.value);
+    // console.log('=> e', e.target.value);
+    const newData = {
+      data: {
+        symptom: caseData.data.attributes?.symptom,
+        treatment: caseData.data.attributes?.treatment,
+        medical_detail: caseData.data.attributes?.medical_detail,
+        prayment_amount: caseData.data.attributes?.prayment_amount,
+      }
+    }
+
+    console.log('=> Submitting case data:', newData); // Debug log
+
+    GlobalApi.updateCase(id, newData)
       .then(response => {
-        console.log('Patient updated successfully:', response.data);
-        toast.success('ບັນທຶກຂໍ້ມູນສຳເລັດ !', { style: toastStyles.success });
+        toast.success('ບັນທຶກຂໍ້ມູນສຳເລັດ!', { style: toastStyles.success });
         router.push('/patients');
       })
       .catch(error => {
         console.error('Error updating patient:', error);
-        toast.error('ບັນທຶກຂໍ້ມູນບໍ່ສຳເລັດກວດຊອບການປ້ອນຂໍ້ມູນ !', { style: toastStyles.error });
+        toast.error('ບັນທຶກຂໍ້ມູນບໍ່ສຳເລັດກວດຊອບການປ້ອນຂໍ້ມູນ!', { style: toastStyles.error });
       });
-
-
-
   };
-  // Function to handle input changes
-  // const handleChange = (event) => {
-  //   const { name, value } = event.target;
-  //   setCaseData(prevState => ({
-  //     ...prevState,
-  //     [name]: value,
-  //   }));
-  // };
+
   const handleDelete = () => {
     if (confirm("ຕ້ອງການລືບຂໍ້ມູນນີ້ແທ້ບໍ?")) {
       GlobalApi.deletecase(id)
         .then(response => {
-          console.log('Patient deleted successfully:', response.data);
-          toast.success('ລືບຂໍ້ມູນສຳເລັດກວດ !', { style: toastStyles.success });
+          toast.success('ລືບຂໍ້ມູນສຳເລັດກວດ!', { style: toastStyles.success });
           router.push('/patients');
         })
-
         .catch(error => {
           console.error('Error deleting patient:', error);
-          toast.error('ລົບຂໍ້ມູນບໍ່ສຳເລັດກວດຊອບການປ້ອນຂໍ້ມູນ !', { style: toastStyles.error });
+          toast.error('ລົບຂໍ້ມູນບໍ່ສຳເລັດກວດຊອບການປ້ອນຂໍ້ມູນ!', { style: toastStyles.error });
         });
     }
   };
+
   const toastStyles = {
     success: {
       backgroundColor: "#1A846C",
@@ -116,58 +121,67 @@ const EditPage = () => {
   };
 
   return (
-    <div className="grid grid-cols-1 bg-gray-200 md:grid-cols-3 border-[1px] p-5 mt-6 rounded-lg">
-      <div className="col-span-3 mt-2 md:mt-0">
-        <form onSubmit={handleSubmit} className="space-y-1 text-primary">
-        <div className="grid gap-3 mb-2 md:grid-cols-2">
-            <h2 className='text-md mt-3 flex gap-1 text-primary '>
-              <CircleUserRound className="text-primary" /> ຊື້
-            </h2>
-            <Input type="text" id="first_name" name="first_name" value={caseData.treatment} onChange={handleChange} />
+    <div className="flex justify-center">
+      <div className="bg-gray-200 border-[8px] p-5 mt-3 rounded-lg" style={{ width: '900px', height: '950px' }}>
+        <div className='text-primary text-3xl font-bold'>ລາຍງານການເຂົາພົບທ່ານໝໍ</div>
+        <form onSubmit={handleSubmit} className="space-y-4 text-primary">
+          <div className="grid grid-cols-1 col-span-1 mt-2 md:mt-5">
+            <div className="flex flex-col space-y-2">
+              <h2 className='text-md flex gap-2 text-primary mt-2 '>
+                <Pill className="text-primary" />ປະເພດຍາ
+              </h2>
+              <textarea className="p-3 text-lg h-40 rounded-lg" id="medical_detail" name="medical_detail" value={caseData.data.attributes?.medical_detail} onChange={handleChange} />
 
-            <h2 className='text-md mt-3 flex gap-1 text-primary '>
-              <CircleUserRound className="text-primary" /> ຊື້
-            </h2>
-            <Input type="text" id="first_name" name="first_name" value={caseData.symptom} onChange={handleChange} />
+              <h2 className='text-md mt-3 flex gap-1 text-primary '>
+                <Activity className="text-primary" /> ອາການ
+              </h2>
+              <textarea className="p-3 text-lg h-40 rounded-lg" id="symptom" name="symptom" value={caseData.data.attributes?.symptom} onChange={handleChange} />
 
-            <h2 className='text-md mt-3 flex gap-1 text-primary '>
-              <CircleUserRound className="text-primary" /> ຊື້
-            </h2>
-            <Input type="text" id="first_name" name="first_name" value={caseData.medical_detail} onChange={handleChange} />
+              <h2 className='text-md mt-3 flex gap-1 text-primary '>
+                <Pill className="text-primary" /> ການຮັກສາ
+              </h2>
+              <textarea className="p-3 text-lg h-40 rounded-lg" id="treatment" name="treatment" value={caseData.data.attributes?.treatment} onChange={handleChange} />
+
+              <h2 className='text-md mt-3 flex gap-1 text-primary '>
+                <Banknote className="text-primary" /> ລວມຄ່າຊຳລະ
+              </h2>
+              <input type="text" className="p-3 text-lg rounded-lg" id="prayment_amount" name="prayment_amount" value={caseData.data.attributes?.prayment_amount} onChange={handleChange} />
             </div>
-          <div className="flex justify-end space-x-4">
-            <Button
-              onClick={() => handleDelete(id)}
-              className="text-primary text-white px-4 py-2 rounded-md bg-red-500 hover:bg-red-600"
-            >
-              <div className="flex items-center space-x-2">
-              <Trash2  className="h-5 w-5" />
-                <span>ລືບ</span>
-              </div>
-            </Button>
-            <Button type="submit" className="text-primary text-white px-4 py-2 rounded-md">
-              <div className="flex items-center space-x-2">
-                <CheckCheck className="h-5 w-5" />
-                <span>ບັນທຶກ</span>
-              </div>
-            </Button>
-
-            <Link href="/patients" legacyBehavior>
-              <a>
-                <Button className="text-primary text-white px-4 py-2 rounded-md bg-gray-500 hover:bg-gray-900">
+            <div className="flex mt-2 justify-end space-x-4">
+              {emailData && canAccess("patientsCasesButtonViewcaseEdit", emailData.attributes.role_1.data.attributes.code) &&
+                <Button onClick={handleDelete} className="text-primary text-white px-4 py-2 rounded-md bg-red-500 hover:bg-red-600">
                   <div className="flex items-center space-x-2">
-                  <CopyXIcon className="h-5 w-5" />
-                    <span>ຍົກເລີກ</span>
+                    <Trash2 className="h-5 w-5" />
+                    <span>ລືບ</span>
                   </div>
                 </Button>
-              </a>
-            </Link>
+              }
+
+              {emailData && canAccess("patientsCasesButtonViewcaseEdit", emailData.attributes.role_1.data.attributes.code) &&
+                <Button type="submit" className="text-primary text-white px-4 py-2 rounded-md">
+                  <div className="flex items-center space-x-2">
+                    <CheckCheck className="h-5 w-5" />
+                    <span>ບັນທຶກ</span>
+                  </div>
+                </Button>
+              }
+
+              <Link href="/patients/" legacyBehavior>
+                <a>
+                  <Button className="text-primary text-white px-4 py-2 rounded-md bg-gray-500 hover:bg-gray-900">
+                    <div className="flex items-center space-x-2">
+                      <CopyXIcon className="h-5 w-5" />
+                      <span>ຍົກເລີກ</span>
+                    </div>
+                  </Button>
+                </a>
+              </Link>
+            </div>
           </div>
         </form>
       </div>
     </div>
   );
 }
-
 
 export default EditPage;

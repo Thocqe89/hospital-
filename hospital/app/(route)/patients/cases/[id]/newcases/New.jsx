@@ -1,19 +1,39 @@
-"use client"
-import React, { useState } from 'react';
+'use client';
+import React, { useState, useEffect } from 'react';
 import GlobalApi from '@/app/_utils/GlobalApi';  // Import your API module
 import { toast } from 'sonner';
-import { Activity, CheckCheck, CopyXIcon, Download, Pill, Syringe } from 'lucide-react';
+import { Activity, CheckCheck, CopyXIcon, Pill, Syringe } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
+import { useKindeBrowserClient } from '@kinde-oss/kinde-auth-nextjs';
 
 function NewCases() {
-    const {id}=useParams()
+    const { id } = useParams();
+    const { user } = useKindeBrowserClient();
     const [newcases, setNewcases] = useState({
         medical_detail: "",
         symptom: "",
         treatment: "",
+        user_1_: {
+            first_name: "",
+            last_name: "",
+            email: ""
+        }
     });
+
+    useEffect(() => {
+        if (user) {
+            setNewcases(prevCases => ({
+                ...prevCases,
+                user_1_: {
+                    first_name: user.first_name || "",
+                    last_name: user.last_name || "",
+                    email: user.email || ""
+                }
+            }));
+        }
+    }, [user]);
 
     const handleChange = (e) => {
         setNewcases({
@@ -29,7 +49,7 @@ function NewCases() {
             toast.error('ບັນທຶກຂໍ້ມູນບໍ່ສຳເລັດ ກວດຊອບການປ້ອນຂໍ້ມູນ!', { style: toastStyles.error });
             return; // Exit the function if any field is empty
         }
-        GlobalApi.PostNewcasesing({...newcases,patient_1_:id})
+        GlobalApi.PostNewcasesing({ ...newcases, patient_1_: id })
             .then(response => {
                 console.log('Patient added successfully:', response.data);
                 toast.success('ບັນທຶກຂໍ້ມູນສຳເລັດການຮັກສາ!', { style: toastStyles.success }); // Show success toast with custom style
@@ -63,20 +83,20 @@ function NewCases() {
                         <h2 className='text-md flex gap-2 text-primary mt-2 '>
                             <Pill className="text-primary" />ປະເພດຍາ
                         </h2>
-                        <textarea className="p-3 text-lg h-40  rounded-lg" id="medical_detail" name="medical_detail" placeholder="ຍາແກ້ປວດ" onChange={handleChange} />
+                        <textarea className="p-3 text-lg h-40  rounded-lg" id="medical_detail" name="medical_detail" placeholder="" onChange={handleChange} />
                     </div>
                     <div className="flex flex-col space-y-2">
                         <h2 className='text-md flex gap-2 text-primary mt-2 '>
                             <Activity className="text-primary" /> ອາການ
                         </h2>
-                        <textarea className="p-3 text-lg h-40  rounded-lg" id="symptom" name="symptom" placeholder="ປວດຮ່າງກາຍ" onChange={handleChange} />
+                        <textarea className="p-3 text-lg h-40  rounded-lg" id="symptom" name="symptom" placeholder="" onChange={handleChange} />
                     </div>
                 </div>
                 <div className="flex flex-col space-y-2">
                     <h2 className='text-md flex gap-2 text-primary mt-2'>
                         <Syringe className="text-primary" />ການຮັກສາ
                     </h2>
-                    <textarea className="p-3 text-lg h-40 rounded-lg" id="treatment" name="treatment" placeholder="ລັງສີສະມອງ " onChange={handleChange} />
+                    <textarea className="p-3 text-lg h-40 rounded-lg" id="treatment" name="treatment" placeholder=" " onChange={handleChange} />
                 </div>
                 <div className="flex justify-end mt-5 space-x-4">
                     <Link href="/patients" passHref legacyBehavior>

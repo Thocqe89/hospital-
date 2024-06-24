@@ -4,9 +4,11 @@ import GlobalApi from '@/app/_utils/GlobalApi'; // Import GlobalApi
 import styled from 'styled-components';
 import { Button } from 'flowbite-react';
 import DataTable from 'react-data-table-component';
-import { FileText, Folders, PencilIcon } from 'lucide-react';
+import { Banknote, FileText, Folders, PencilIcon, View } from 'lucide-react';
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
+import { canAccess } from '@/lib/utils';
+import { useKindeBrowserClient } from '@kinde-oss/kinde-auth-nextjs';
 
 const TextField = styled.input`
   height: 32px;
@@ -35,7 +37,11 @@ const ClearButton = styled(Button)`
   display: flex;
   align-items: center;
   justify-content: center;
-`;
+  
+    &:hover {
+      cursor: pointer;
+    }
+  `;
 
 const FilterComponentContainer = styled.div`
   display: flex;
@@ -104,14 +110,14 @@ const columns = [
       color: '#0D7A68',
     },
   },
-  {
-    name: 'Updated At',
-    selector: row => row.updatedAt,
-    sortable: true,
-    style: {
-      color: '#0D7A68',
-    },
-  },
+  // {
+  //   name: 'Updated At',
+  //   selector: row => row.updatedAt,
+  //   sortable: true,
+  //   style: {
+  //     color: '#0D7A68',
+  //   },
+  // },
   {
     name: 'Created At',
     selector: row => row.createdAt,
@@ -135,9 +141,9 @@ const columns = [
       <>
         <Link href={`/patients/cases/${row.id}/Print`} passHref>
           <Button
-            style={{ backgroundColor: 'transparent', color: '#0D7A68', border: 'none', padding: '0', cursor: 'pointer' }}
+            style={{ backgroundColor: 'transparent', color: '#0D7A68', border: 'none', padding: '0', cursor: 'hover' }}
           >
-            <FileText className="hover:text-red-600" size={22} />
+            <FileText className="group-hover:text-red-500 group-hover:scale-125 transition-transform duration-200" size={22} />
           </Button>
         </Link>
 
@@ -152,13 +158,13 @@ const columns = [
         </Link> */}
 
         <Link href={`/patients/cases/${row.id}/edit`} passHref>
-        <Button
+          <Button
             onClick={() => handleEdit(row)}
             style={{ backgroundColor: 'transparent', color: '#0D7A68', border: 'none', padding: '0', cursor: 'pointer' }}
           >
-            <PencilIcon className="group-hover:text-red-500 group-hover:scale-125 transition-transform duration-200" size={22} />
+            <Banknote className="group-hover:text-red-500 group-hover:scale-125 transition-transform duration-200" size={22} />
           </Button>
-</Link>
+        </Link>
       </>
     ),
     ignoreRowClick: true,
@@ -176,6 +182,27 @@ const Filtering = () => {
   const [resetPaginationToggle, setResetPaginationToggle] = useState(false);
   const [cases, setCases] = useState([]);
   const { id } = useParams();
+  const { user } = useKindeBrowserClient();
+  const [emailData, setEmailData] = useState(null);
+  console.log(user)
+  useEffect(() => {
+    if (user && user.email) {
+      // Fetch email data from the API when the component mounts
+      GlobalApi.getEmail(user.email)
+        .then(response => {
+          console.log('API Response:', response); // Log the entire response object
+          const emailList = response.data.data
+          // console.log(emailList)
+          const foundEmail = emailList.find(item => item.attributes.email
+            === user.email);
+          console.log(foundEmail)
+          setEmailData(foundEmail);
+        })
+        .catch(error => {
+          console.error('Error fetching email:', error);
+        });
+    }
+  }, [user]);
 
   useEffect(() => {
     if (id) {
@@ -201,7 +228,7 @@ const Filtering = () => {
       (user_1s?.data?.some(user => searchRegex.test(user.attributes.first_name)))
     );
   }).map(caseItem => {
-    const { patient_1_, user_1s } = caseItem.attributes;
+    const { patient_1_, user_1s,payment } = caseItem.attributes;
     return {
       id: caseItem.id,
       patientName: patient_1_?.data?.attributes?.first_name || '',
@@ -211,6 +238,8 @@ const Filtering = () => {
       medical_detail: caseItem.attributes.medical_detail,
       updatedAt: caseItem.attributes.updatedAt,
       createdAt: caseItem.attributes.createdAt,
+      prayment_amount: payment?.data?.attributes?.prayment_amount || '',
+
     };
   });
 
@@ -226,6 +255,113 @@ const Filtering = () => {
       <FilterComponent onFilter={e => setFilterText(e.target.value)} onClear={handleClear} filterText={filterText} id={id} />
     );
   }, [filterText, resetPaginationToggle, id]);
+  const columns = [
+    {
+      name: 'ຊື້ຄົນເຈັບ',
+      selector: row => row.patientName,
+      sortable: true,
+      style: {
+        color: '#0D7A68',
+      },
+    },
+    {
+      name: 'ອາການ',
+      selector: row => row.symptom,
+      sortable: true,
+      style: {
+        color: '#0D7A68',
+      },
+    },
+    {
+      name: 'ການຮັກສາ',
+      selector: row => row.treatment,
+      sortable: true,
+      style: {
+        color: '#0D7A68',
+      },
+    },
+    {
+      name: 'ຍາ ແລະ ອຸປະກອນການຮັກສາ',
+      selector: row => row.medical_detail,
+      sortable: true,
+      style: {
+        color: '#0D7A68',
+      },
+    },
+    // {
+    //   name: 'Updated At',
+    //   selector: row => row.updatedAt,
+    //   sortable: true,
+    //   style: {
+    //     color: '#0D7A68',
+    //   },
+    // },
+    {
+      name: 'Created At',
+      selector: row => row.createdAt,
+      sortable: true,
+      style: {
+        color: '#0D7A68',
+      },
+    },
+    {
+      name: 'ທ່ານໝໍ',
+      selector: row => row.userName,
+      sortable: true,
+      style: {
+        color: '#0D7A68',
+        textAlign: 'center',
+      },
+    },
+    {
+      name: 'ລວມລາຍຈ່າຍ',
+      selector: row => row.prayment_amount,
+      sortable: true,
+      style: {
+        color: '#0D7A68',
+        textAlign: 'center',
+      },
+    },
+    {
+      name: '',
+      cell: row => (
+        <>
+        
+
+
+          {/* <Link href={`/patients/${row.id}`} passHref>
+            <Button
+              onClick={() => handleEdit(row)}
+              style={{ backgroundColor: 'transparent', color: '#0D7A68', border: 'none', padding: '0', cursor: 'pointer' }}
+            >
+              <PencilIcon className="group-hover:text-red-500 group-hover:scale-125 transition-transform duration-200" size={22} />
+            </Button>
+          </Link> */}
+
+          {emailData && canAccess("patientsEdit", emailData.attributes.role_1.data.attributes.code) && <Link href={`/patients/cases/${row.id}/edit`} passHref>
+            <Button
+              onClick={() => handleEdit(row)}
+              style={{ backgroundColor: 'transparent', color: '#0D7A68', border: 'none', padding: '0', cursor: 'pointer' }}
+            >
+              <Banknote className="group-hover:text-red-500 group-hover:scale-125 transition-transform duration-200" size={22} />
+            </Button>
+          </Link>}
+
+          {emailData && canAccess("patientsCasesButtonPrint", emailData.attributes.role_1.data.attributes.code) && <Link href={`/patients/cases/${row.id}/Print`} passHref>
+            <Button
+              style={{ backgroundColor: 'transparent', color: '#0D7A68', border: 'none', padding: '0', cursor: 'hover' }}
+            >
+              <FileText className="group-hover:text-red-500 group-hover:scale-125 transition-transform duration-200" size={22} />
+            </Button>
+          </Link>}
+        </>
+      ),
+      ignoreRowClick: true,
+      allowOverflow: true,
+      button: true,
+    },
+  ];
+
 
   return (
     <DataTable

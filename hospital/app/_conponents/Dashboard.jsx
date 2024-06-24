@@ -1,3 +1,4 @@
+"use client"
 import React, { PureComponent } from 'react';
 import { PieChart, Pie, Sector, ResponsiveContainer, Tooltip, Legend, Cell, BarChart, CartesianGrid, XAxis, YAxis, Bar } from 'recharts';
 import GlobalApi from '@/app/_utils/GlobalApi';

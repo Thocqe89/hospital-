@@ -1,6 +1,7 @@
 import React from 'react';
 import NewCases from './New';
 
+
 function Page() {
   return (
     <div >

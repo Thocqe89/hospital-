@@ -1,5 +1,5 @@
 'use client';
-
+import { useKindeBrowserClient } from '@kinde-oss/kinde-auth-nextjs';
 import React, { useState, useEffect } from 'react';
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -8,7 +8,9 @@ import GlobalApi from '@/app/_utils/GlobalApi';
 import { CircleUserRound, Users, SquareUserRound, PhoneCall, LucideHome, School2, Hotel, Earth, CalendarDays, CheckCheck, ClipboardPlus, BriefcaseBusiness, School, GraduationCap, MailCheck, RectangleEllipsis } from 'lucide-react';
 import { toast } from 'sonner';
 
-function addnew() {
+function AddNew() {
+  const { user } = useKindeBrowserClient();
+
   const [addUser, setAddUser] = useState({
     first_name: "",
     last_name: "",
@@ -18,15 +20,16 @@ function addnew() {
     district: "",
     province: "",
     country: "",
-    email: "",
+    email: user?.email,
     password: "",
     date_of_birth: "",
     experience_year: "",
     graduation_at: "",
     graduation_date: "",
-    employees: "",
-    role_1: ""
+    // employees: "",
+    // role_1: ""
   });
+  console.log("=> ", user?.email);
 
   const [employees, setEmployees] = useState([]);
   const [roles, setRoles] = useState([]);
@@ -65,20 +68,21 @@ function addnew() {
   const handleChange = (e) => {
     setAddUser({
       ...addUser,
+      email: user?.email,
       [e.target.name]: e.target.value
     });
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    GlobalApi.addUser({ ...addUser })
+    GlobalApi.addUser({ ...addUser, email: user?.email })
       .then(response => {
         console.log('Patient added successfully:', response.data);
         toast.success('ບັນທຶກຂໍ້ມູນສຳເລັດ!', { style: toastStyles.success });
       })
       .catch(error => {
         console.error('Error adding patient:', error);
-        toast.error('ບັນທຶກຂໍ້ມູນບໍ່ສຳເລັດ!', { style: toastStyles.error });
+        toast.error('ບັນທຶກຂໍ້ມູນບໍ່ສຳເລັດ !', { style: toastStyles.error });
       });
   };
 
@@ -94,11 +98,11 @@ function addnew() {
   };
 
   return (
-    
+
     <div className="grid grid-cols-1 bg-gray-200 md:grid-cols-3 border-[1px] p-5 mt-6 rounded-lg">
-      
+
       <div className="col-span-3 mt-2 md:mt-0">
-        
+
         <form onSubmit={handleSubmit} className="space-y-1 text-primary">
           <div className="grid gap-3 mb-2 md:grid-cols-2">
             <h2 className='text-md mt-3 flex gap-1 text-primary '>
@@ -147,32 +151,34 @@ function addnew() {
             <Input type="date" id="date_of_birth" name="date_of_birth" onChange={handleChange} />
 
             <h2 className='text-md flex gap-2 text-primary '>
-            <School className='text-primary'/> ຈົບຈາກ
+              <School className='text-primary' /> ຈົບຈາກ
             </h2>
             <Input type="text" id="graduation_at" name="graduation_at" placeholder="graduation_at" onChange={handleChange} />
 
             <h2 className='text-md flex gap-2 text-primary '>
-            <BriefcaseBusiness className='text-primary'/>ປະສົບການ
+              <BriefcaseBusiness className='text-primary' />ປະສົບການ
             </h2>
             <Input type="text" id="experience_year" name="experience_year" placeholder="experience_year" onChange={handleChange} />
 
             <h2 className='text-md flex gap-2 text-primary '>
-            <GraduationCap className='text-primary' /> ວັນ/ເດືອນ/ປີຈົບ
+              <GraduationCap className='text-primary' /> ວັນ/ເດືອນ/ປີຈົບ
             </h2>
             <Input type="date" id="graduation_date" name="graduation_date" onChange={handleChange} />
 
-            <h2 className='text-md flex gap-2 text-primary '>
-            <MailCheck className='text-primary'/>ອີເມວ
+            {/* <h2 className='text-md flex gap-2 text-primary '>
+              <MailCheck className='text-primary' />ອີເມວ
             </h2>
-            <Input type="text" id="email" name="email" placeholder="mail" onChange={handleChange} />
+            {user?.email && (
+              <Input type="text" id="email" name="email" placeholder="mail" onChange={handleChange} />
+            )} */}
+            <h2 className='text-md flex gap-2 text-primary '>
+              <RectangleEllipsis className="text-primary" />ລະຫັດອີເມວ
+            </h2>
 
-            <h2 className='text-md flex gap-2 text-primary '>
-            <RectangleEllipsis className="text-primary" />ລະຫັດອີເມວ
-            </h2>
             <Input type="text" id="password" name="password" placeholder="password" onChange={handleChange} />
 
             {/* Dropdown for selecting Employee */}
-            <h2 className='text-md flex gap-2 text-primary '>
+            {/* <h2 className='text-md flex gap-2 text-primary '>
               <CircleUserRound className="text-primary" /> ພະແນກ
             </h2>
             <select
@@ -186,10 +192,10 @@ function addnew() {
               {employees.map(employee => (
                 <option key={employee.id} value={employee.id}>{employee.name}</option>
               ))}
-            </select>
+            </select> */}
 
             {/* Dropdown for selecting Role */}
-            <h2 className='text-md flex gap-2 text-primary '>
+            {/* <h2 className='text-md flex gap-2 text-primary '>
             <ClipboardPlus className='text-primary'/>ຕຳແໜ່ງ
             </h2>
             <select
@@ -203,8 +209,8 @@ function addnew() {
               {roles.map(role => (
                 <option key={role.id} value={role.id}>{role.name}</option>
               ))}
-            </select>
-          
+            </select> */}
+
           </div>
           <div className="flex justify-end space-x-4">
             <Button type="submit" className="text-primary text-white px-4 py-2 rounded-md">
@@ -213,16 +219,16 @@ function addnew() {
                 <span>ບັນທຶກ</span>
               </div>
             </Button>
-            </div>
+          </div>
 
-       
+
         </form>
-       
+
       </div>
-      
+
     </div>
-    
+
   );
 }
 
-export default addnew;
+export default AddNew;

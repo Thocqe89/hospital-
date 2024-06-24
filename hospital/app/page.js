@@ -31,16 +31,22 @@ export default function Home() {
   };
 
 
-
+const user={name:"mm"}
 
   return (
     <div className="">
-      <Dashboard />
+      {user?(<>
+        <Dashboard />
       
       <div style={{ marginTop: "50px" }}>
         <CategorySearch />
       </div>
       <Doctorlist doctorlist={doctorlist} />
+      </>):(
+        <>
+        
+        </>
+      )}
     </div>
   );
 }

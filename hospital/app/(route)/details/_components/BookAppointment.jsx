@@ -1,4 +1,8 @@
-import React, { useEffect, useState, useRef } from 'react';
+"use client"
+
+import GlobalApi from '@/app/_utils/GlobalApi';
+import { Button } from "@/components/ui/button";
+import { Calendar } from "@/components/ui/calendar";
 import {
     Dialog,
     DialogClose,
@@ -9,11 +13,9 @@ import {
     DialogTitle,
     DialogTrigger,
 } from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
-import { Calendar } from "@/components/ui/calendar";
-import { CalendarRange, CheckCheck, Clock } from 'lucide-react';
 import { useKindeBrowserClient } from '@kinde-oss/kinde-auth-nextjs';
-import GlobalApi from '@/app/_utils/GlobalApi';
+import { CalendarRange, CheckCheck, Clock } from 'lucide-react';
+import { useEffect, useRef, useState } from 'react';
 import { toast } from 'sonner';
 import GeneratePDF from './GeneratePDF';
 
@@ -28,11 +30,9 @@ function BookAppointment({ doctor }) {
     const componentRef = useRef();
     const [bookedDates, setBookedDates] = useState([]);
 
-    useEffect(() => {
-        // Fetch booked time slots and set booked dates
+useEffect(() => {
         getTime();
 
-        // Fetch appointments and set the latest appointment
         GlobalApi.getAppointments().then(res => {
             const fetchedAppointments = res.data.data;
             if (fetchedAppointments.length > 0) {
@@ -92,11 +92,10 @@ function BookAppointment({ doctor }) {
         const timeList = [];
         for (let i = 1; i <= 15; i++) {
             const paddedNumber = i.toString().padStart(3, '0');
-            timeList.push({ time: `Q${paddedNumber}` });
+            timeList.push({ time: `Q${paddedNumber}`, disabled: false });
         }
         setTimeSlot(timeList);
 
-        // Fetch booked time slots for the selected date and doctor
         GlobalApi.getBookedTimeSlots(doctor.id, date)
             .then(resp => {
                 const bookedSlots = resp.data.map(slot => slot.attributes);

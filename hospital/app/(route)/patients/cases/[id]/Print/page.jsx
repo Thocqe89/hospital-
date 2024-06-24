@@ -10,6 +10,7 @@ import QRCode from 'qrcode';
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
 import { height } from '@mui/system';
+import Link from 'next/link';
 
 
 const PrintPage = () => {
@@ -18,10 +19,12 @@ const PrintPage = () => {
   const [caseData, setCaseData] = useState(null);
   const canvasRef = useRef(null);
   const [currentDate, setCurrentDate] = useState('');
+  console.log('caseData response:', caseData);
+
 
   useEffect(() => {
     if (id) {
-      GlobalApi.getPatientByCaseId(id)
+      GlobalApi.getPatientCase(id)
         .then(response => {
           console.log('API response:', response); // Log the full response for debugging
           const caseDetails = response.data.data;
@@ -39,24 +42,43 @@ const PrintPage = () => {
     setCurrentDate(today.toLocaleDateString('en-US', options));
   }, [id]);
 
-  const generateQRCode = async (caseDetails) => {
+  const formatPaymentAmount = (amount) => {
+    // Convert amount to number and round to 2 decimal places
+    const formattedAmount = parseFloat(amount || 0).toFixed(2);
+
+    // Split the amount into integer and decimal parts
+    const parts = formattedAmount.split('.');
+
+    // Insert commas for thousands separator
+    parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+
+    // Join integer and decimal parts with periods
+    return parts.join('.') + ' LAK';
+  };
+
+  const generateQRCode = async () => {
     try {
+      // Get the href attribute from the Link component
+      const imageUrl = `${window.location.origin}/x-ray.jpg`;
+      // Generate the QR code data URL using the href
+      const qrCodeDataURL = await QRCode.toDataURL(href);
+      // Get the canvas reference
       const canvas = canvasRef.current;
-      await QRCode.toCanvas(canvas, JSON.stringify(caseDetails), {
-        errorCorrectionLevel: 'L', // or 'M'
-        color: {
-          dark: '#0D7A68',
-          //  backgroundColor: '#ffffff' // Background color for the QR code
-
-
-        },
-        width: 150,
-        height: 150,
-      });
+      // Get the canvas context
+      const context = canvas.getContext('2d');
+      // Create an image element
+      const img = new Image();
+      // Set the image source to the QR code data URL
+      img.src = qrCodeDataURL;
+      // When the image is loaded, draw it on the canvas
+      img.onload = () => {
+        context.drawImage(img, 0, 0);
+      };
     } catch (err) {
       console.error('Error generating QR code:', err);
     }
   };
+
   const handlePrint = useReactToPrint({
     content: () => componentRef.current,
   });
@@ -80,7 +102,7 @@ const PrintPage = () => {
   };
   return (
     <div className='text-primary   flex flex-col justify-center items-center'>
-      <div className='flex items-center gap-10 mt-10'>
+      <div className='flex items-center gap-10 mt-8'>
         <h2 className="text-2xl font-bold">ປີ້ນບິນໄອດີທີ: <span className='text-rose-700 font-bold'>{id}</span></h2>
         <span>
           <ReactToPrint
@@ -105,7 +127,7 @@ const PrintPage = () => {
       </div>
 
       <div ref={componentRef} className="a4-page " style={{
-        // backgroundImage: 'url("/101.jpg")',
+        // backgroundImage: 'url("/91.jpg")',
         backgroundSize: 'cover',
         // color: 'black',
         backgroundPosition: 'center ',
@@ -113,29 +135,47 @@ const PrintPage = () => {
       }}>
         {caseData ? (
           <div className=' text-primary'>
-            <div className='flex items-center gap-10'>
+            {/* <div className='flex items-center gap-10'>
 
               <Image src='/logoS.png' alt='logo' width={100} height={100} />
               <h2 className='text-primary text-start font-bold text-xl'>ໂຮງຫມໍ ເສດຖາທິຣາດ <samp className='text-rose-700 font-bold '>+</samp>
-
-
+             
                 <h2>Setthathirath Hospital</h2>
-
+                
+              
               </h2>
 
+            </div> */}
+            <div className='grid grid-cols-2'>
+              <div className='flex items-center gap-10'>
+
+                <Image src='/logoS.png' alt='logo' width={100} height={100} />
+                <h2 className='text-primary text-start font-bold text-xl'>ໂຮງຫມໍ ເສດຖາທິຣາດ <samp className='text-rose-700 font-bold '>+</samp>
+
+                  <h2>Setthathirath Hospital</h2>
+
+
+                </h2>
+
+              </div>
+              <div className="text-end">
+                <span className="text-1xl ">ເລກທີ: <span className='text-rose-700  font-bold '>00{id}</span>/ສຖທຣ</span>
+                <p className="text-sm text-end text-primary">ວັນທີ: <span className='font-bold'>{currentDate} </span> </p>
+                <p className="text-sm text-end text-primary">ນະຄອນຫຼວງວຽງຈັນ ສປປລາວ</p>
+              </div>
             </div>
-            <div className='items-end'>
-              <h2 className="text-1xl text-end font-bold">ເລກທີ: <span className='text-rose-700 text-2xl  font-bold'>00{id}</span>/ສທຣ</h2>
-            </div>
+
+
             <div style={{
               backgroundColor: 'rgba(255, 255, 255, 0.8)',
               backdropFilter: 'blur(10px)',
               width: '720px', // Set the desired width
               height: '840px' // Set the desired height
-            }} className='p-4 border mt-2 rounded-lg shadow-sm'>
+            }} className='p-4 border mt-2 rounded-lg '>
+
               <di className='items-strat text-1xl '>
                 <div className='text-start'>
-                  <div className='grid grid-cols-2'>
+                  <div className='  grid grid-cols-2'>
                     <p><strong className='text-primary'>ຊື້:</strong> {caseData.attributes.patient_1_.data.attributes.first_name}</p>
                     <p><strong>ນາມສະກຸນ:</strong> {caseData.attributes.patient_1_.data.attributes.last_name}</p>
                     <p><strong>ເພດ:</strong> {caseData.attributes.patient_1_.data.attributes.gender}</p>
@@ -144,45 +184,74 @@ const PrintPage = () => {
                     <p><strong>ເມືອງ:</strong> {caseData.attributes.patient_1_.data.attributes.district}</p>
                     <p><strong>ແຂວງ:</strong> {caseData.attributes.patient_1_.data.attributes.province}</p>
                     <p><strong>ປະເທດ:</strong> {caseData.attributes.patient_1_.data.attributes.country}</p>
-                    <p><strong>Emergency Contact:</strong> {caseData.attributes.patient_1_.data.attributes.emergency_name} </p>
-                    <p><strong>kk:</strong> {caseData.attributes.patient_1_.data.attributes.emergency_phone_number}</p>
-                    <p><strong>Date of Birth:</strong> {caseData.attributes.patient_1_.data.attributes.date_of_birth}</p>
-                    <p><strong>Insurance Name:</strong> {caseData.attributes.patient_1_.data.attributes.insurance_name}</p>
-                    <p><strong>Insurance End Date:</strong> {caseData.attributes.patient_1_.data.attributes.insurance_end_date}</p>
+                    <p><strong>ວັນເດືອນປີເກີດ:</strong> {caseData.attributes.patient_1_.data.attributes.date_of_birth}</p>
+                    <p><strong>ຜູ້ຕິດຕໍ້ສຸເສີນ:</strong> {caseData.attributes.patient_1_.data.attributes.emergency_name} </p>
+                    <p><strong>ເບີຜູ້ຕິດຕໍ້ສຸເສີນ:</strong> {caseData.attributes.patient_1_.data.attributes.emergency_phone_number}</p>
+                    <p><strong>ບໍລິສັດປະກັນໄພ:</strong> {caseData.attributes.patient_1_.data.attributes.insurance_name}</p>
+                    <p><strong>ວັນທີ່ເລີ່ມປະກັນໄພ:</strong> {caseData.attributes.patient_1_.data.attributes.insurance_strat_date}</p>
+                    <p><strong>ວັນທີ່ສິ້ນສຸດປະກັນໄພ:</strong> {caseData.attributes.patient_1_.data.attributes.insurance_end_date}</p>
                     <p><strong>ເອກະສານຍືນຍັນຕົວຕົນ:</strong> {caseData.attributes.patient_1_.data.attributes.identify_familybook_passport}</p>
                     {/* <p><strong>Payment Amount:</strong> {caseData.attributes.patient_1_.data.attributes.prayment_amount}</p> */}
                     {/* <p><strong>Payment Date:</strong> {caseData.attributes.patient_1_.data.attributes.prayment_date}</p> */}
                   </div>
-                  <h2 className='text-center text-rose-700 text-2xl  font-bold'>ຂໍ້ມູນການປີ້ນປົວ</h2>
-
-                  <div style={{
-
-                    backdropFilter: 'blur(10px)',
-                    width: '680px', // Set the desired width
-                    height: '438px' // Set the desired height
-                  }} className='bg-gray-200 border-[1px] p-10 mt-6 rounded-lg'>
-
-                    <p><strong>ວັນທີເຂົ້າຮັກສາ:</strong> {caseData.attributes.createdAt}</p>
-                    <p><strong>ອາການ:</strong><div>{caseData.attributes.symptom}</div> </p>
-                    <p><strong>ການປີ້ນປົວ:</strong> <div>{caseData.attributes.treatment}</div></p>
-                    <p ><strong>ຍາ ແລະ ອຸປະກອນ:</strong> <div>{caseData.attributes.medical_detail}</div></p>
-                    
-                    <div style={{
-                      marginTop: '190px', // Adjust this value to move the QR code down
-                      display: 'flex',
-                      justifyContent: 'flex-end', // Align to the right
-                      transform: 'scale(0.8)', // Scale down if necessary
-                      marginRight: '-115px' // Adjust this value to move the QR code to the right
-                    }}>
-                      <canvas ref={canvasRef} />
-                      <br>
-                      </br>
-                    </div>
-                    <p className="text-sm text-end text-primary">ວັນທີ: {currentDate} ນະຄອນຫຼວງວຽງຈັນ ສປປລາວ</p>
-
-                    {/* <p><strong>Updated At:</strong> {caseData.attributes.updatedAt}</p> */}
-                  </div>
                 </div>
+
+                <div><h2 className='text-center text-rose-700 text-2xl  font-bold'>ຂໍ້ມູນການປີ້ນປົວ</h2></div>
+
+
+                <div style={{
+
+                  backdropFilter: 'blur(10px)',
+                  width: '680px', // Set the desired width
+                  Height: '330px' // Set the desired height
+                }} className='bg-gray-200 border-[1px] p-10 mt-6 rounded-lg'>
+                  <div> </div>
+                  <p className='text-center'><strong>ວັນທີເຂົ້າຮັກສາ:</strong> {caseData.attributes.createdAt}</p>
+                  <p>
+                    <strong>ທານໝໍ:   </strong><span className=' text-1xl  font-bold'>
+                      {caseData.attributes.user_1s.data?.map((userData, index) => (
+                        <span key={index}>{userData.attributes.first_name} {userData.attributes.last_name}</span>
+                      ))}
+                    </span>
+                  </p>
+
+                  <p><strong>ອາການ:</strong><div>{caseData.attributes.symptom}</div> </p>
+                  <p><strong>ການປີ້ນປົວ:</strong> <div>{caseData.attributes.treatment}</div></p>
+                  <p ><strong>ຍາ ແລະ ອຸປະກອນ:</strong> <div>{caseData.attributes.medical_detail}</div></p>
+
+
+
+                  {/* <p><strong>Updated At:</strong> {caseData.attributes.updatedAt}</p> */}
+                </div>
+                <div className='mt-2'>
+                  <p className="text-strat text-primary">
+                    ອອກບິນໂດຍ: <span className="text-gray-500"> {caseData.attributes.user_1s.data[0]?.attributes.first_name} <span> {caseData.attributes.user_1s.data[0]?.attributes.last_name}</span>
+ 
+                    </span>
+                  </p>
+
+                </div>
+                <div className='text-end'>
+                  <p className="text-strat text-primary"> ລວມລາຍຈ່າຍ:
+                    <div className="text-rose-700 font-bold text-2xl">
+                      {formatPaymentAmount(caseData.attributes.prayment_amount)}
+                    </div>
+                  </p>
+                </div>
+
+                <div style={{
+                  marginTop: '-5px', // Adjust this value to move the QR code down
+                  display: 'flex',
+                  justifyContent: 'flex-end', // Align to the right
+                  transform: 'scale(0.8)', // Scale down if necessary
+                  marginRight: '-70px' // Adjust this value to move the QR code to the right
+                }}>
+                  <Image src="/xay.png" alt="X-Ray" width={150} height={150} />
+
+                </div>
+
+
+
 
               </di>
 
@@ -191,7 +260,8 @@ const PrintPage = () => {
             </div>
             <div className='text-center  '>
 
-              <span className=''>
+              <span className=' y'>
+
                 <h2 className=" text-gray-500">
 
                   <br class="mb-2" />
@@ -219,7 +289,7 @@ const PrintPage = () => {
           padding: 1cm;
           margin: auto;
           background: white;
-          box-shadow: 0 0 0.5cm rgba(0,0,0,0.5);
+          box-shadow: 0 0 0.5cm rgba(0,0,0,0.0);
           overflow: hidden;
           display: flex;
           flex-direction: column;
@@ -241,7 +311,7 @@ const PrintPage = () => {
         }
         .text-center {
           text-align: center;
-        }
+         }
          .qr-code {
           margin-top: 10px; /* Adjust this value to move the QR code down */
           display: flex;
@@ -250,13 +320,13 @@ const PrintPage = () => {
           margin-right: -80px; /* Adjust this value to move the QR code to the right */
              
         }
-        @media print {
+         @media print {
           .a4-page {
             width: 21cm;
             height: 29.7cm;
             padding: 0.5cm;
             margin: 0;
-            box-shadow: none;
+           box-shadow: none;
           }
           .content {
             display: flex;
