@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "next build && next export",
     "start": "next start",
     "lint": "next lint",
     "email": "email dev"
@@ -61,6 +61,7 @@
     "react-select": "^5.8.0",
     "react-to-print": "^2.15.1",
     "recharts": "^2.12.7",
+    "server": "^1.0.39",
     "sonner": "^1.4.41",
     "styled-components": "^6.1.11",
     "tailwind-merge": "^2.3.0",

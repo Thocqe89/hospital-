@@ -55,7 +55,7 @@ function Header() {
           ໂຮງຫມໍ ເສດຖາທິຣາດ <span className='text-rose-700 font-bold'>+</span>
         </h2>
         <ul className='md:flex gap-8 hidden'>
-          {Menu.filter(item=>emailData &&canAccess(item.value,emailData.attributes.role_1.data.attributes.code)).map( (item ) => (
+          {Menu.filter(item=>emailData &&canAccess(item.value,emailData.attributes?.role_1.data?.attributes?.code)).map( (item ) => (
             <Link href={item.path} key={item.id}>
               <li className='hover:text-primary cursor-pointer hover:scale-105 transition-all ease-in-out'>
                 {item.name === 'LA' ? (

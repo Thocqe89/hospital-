@@ -65,7 +65,7 @@ const FilterComponent = ({ filterText, onFilter, onClear ,code  }) => (
     />
     
 
-{code&&canAccess("newpatients",code)&&<Link href="patients/add" passHref> 
+{code&&canAccess("bookq",code)&&<Link href="patients/add" passHref> 
       <FilterButton>
         <div className="flex items-center space-x-2">
           <UserRoundPlus className="h-5 w-5" />
@@ -147,7 +147,7 @@ const Filtering = () => {
     };
 
     return (
-      <FilterComponent code={emailData&&emailData.attributes.role_1.data.attributes.code} onFilter={e => setFilterText(e.target.value)} onClear={handleClear} filterText={filterText} />
+      <FilterComponent code ={emailData &&emailData.attributes.role_1.data.attributes.code} onFilter={e => setFilterText(e.target.value)} onClear={handleClear} filterText={filterText} />
       
     );
   }, [filterText, resetPaginationToggle]);

@@ -23,7 +23,7 @@ function Bookinglist({ bookings }) {
             <span className='text-red-800  font-bold ' style={{ fontSize: "50px" }}>{booking.attributes.Time}</span>
           </p>
           <p className="text-lg d text-gray-800">
-            <strong className='text-primary font-semibol '>ທ່ານໝໍ:</strong> <spans> {booking.attributes.UserName}</spans>
+            <strong className='text-primary font-semibol '>ຈອງໂດຍ:</strong> <spans> {booking.attributes.UserName}</spans>
           </p>
           {/* <p className="text-gray-600">
             <strong>Email:</strong> {booking.attributes.Email}

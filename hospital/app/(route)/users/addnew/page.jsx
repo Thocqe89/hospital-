@@ -165,12 +165,14 @@ function AddNew() {
             </h2>
             <Input type="date" id="graduation_date" name="graduation_date" onChange={handleChange} />
 
-            {/* <h2 className='text-md flex gap-2 text-primary '>
-              <MailCheck className='text-primary' />ອີເມວ
+            <h2 className='text-md flex gap-2 text-primary '>
+              <MailCheck className='text-primary' />
+              ອີເມວ
             </h2>
             {user?.email && (
-              <Input type="text" id="email" name="email" placeholder="mail" onChange={handleChange} />
-            )} */}
+              <p> {user.email}</p>
+            )}
+            
             <h2 className='text-md flex gap-2 text-primary '>
               <RectangleEllipsis className="text-primary" />ລະຫັດອີເມວ
             </h2>
