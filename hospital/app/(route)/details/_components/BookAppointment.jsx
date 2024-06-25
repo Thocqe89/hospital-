@@ -15,7 +15,7 @@ import {
 } from "@/components/ui/dialog";
 import { useKindeBrowserClient } from '@kinde-oss/kinde-auth-nextjs';
 import { CalendarRange, CheckCheck, Clock } from 'lucide-react';
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { toast } from 'sonner';
 import GeneratePDF from './GeneratePDF';
 
@@ -30,7 +30,26 @@ function BookAppointment({ doctor }) {
     const componentRef = useRef();
     const [bookedDates, setBookedDates] = useState([]);
 
-useEffect(() => {
+    const getTime = useCallback(() => {
+        const timeList = [];
+        for (let i = 1; i <= 15; i++) {
+            const paddedNumber = i.toString().padStart(3, '0');
+            timeList.push({ time: `Q${paddedNumber}`, disabled: false });
+        }
+        setTimeSlot(timeList);
+
+        GlobalApi.getBookedTimeSlots(doctor.id, date)
+            .then(resp => {
+                const bookedSlots = resp.data.map(slot => slot.attributes);
+                setBookedTimeSlots(bookedSlots.map(slot => slot.Time));
+                setBookedDates(bookedSlots.map(slot => new Date(slot.Date)));
+            })
+            .catch(error => {
+                console.error("Error fetching booked time slots:", error);
+            });
+    }, [doctor.id, date]);
+
+    useEffect(() => {
         getTime();
 
         GlobalApi.getAppointments().then(res => {
@@ -46,7 +65,7 @@ useEffect(() => {
                 });
             }
         });
-    }, [date]);
+    }, [date, getTime]);
 
     const toastStyles = {
         success: {
@@ -85,25 +104,6 @@ useEffect(() => {
             })
             .catch(error => {
                 toast.error("An error occurred while sending the booking.", { style: toastStyles.error });
-            });
-    };
-
-    const getTime = () => {
-        const timeList = [];
-        for (let i = 1; i <= 15; i++) {
-            const paddedNumber = i.toString().padStart(3, '0');
-            timeList.push({ time: `Q${paddedNumber}`, disabled: false });
-        }
-        setTimeSlot(timeList);
-
-        GlobalApi.getBookedTimeSlots(doctor.id, date)
-            .then(resp => {
-                const bookedSlots = resp.data.map(slot => slot.attributes);
-                setBookedTimeSlots(bookedSlots.map(slot => slot.Time));
-                setBookedDates(bookedSlots.map(slot => new Date(slot.Date)));
-            })
-            .catch(error => {
-                console.error("Error fetching booked time slots:", error);
             });
     };
 

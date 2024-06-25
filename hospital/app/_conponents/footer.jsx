@@ -24,9 +24,9 @@ function footer() {
           <br class="mb-2" />
           Mail : hospitalsetthathirath@gmail.com 
         </h2>
-        <Link href='https://maps.app.goo.gl/dHXmWUFUTacNHDAt5'>
+        {/* <Link href='https://maps.app.goo.gl/dHXmWUFUTacNHDAt5'>
         <h2 className='font-bold  text-center text-3xl tracking-wide'><samp className='text-primary'><Map /></samp> </h2>
-</Link>
+</Link> */}
 
         {/* 
     <ul className="mt-12 flex flex-wrap justify-center gap-6 md:gap-8 lg:gap-12">
