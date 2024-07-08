@@ -313,26 +313,26 @@ const Filtering = () => {
         color: '#0D7A68',
       },
     },
-    // {
-    //   name: 'ຕຳແໜ່ງ',
-    //   selector: row => row.role_1?.data?.attributes?.status || 'N/A',
-    //   sortable: true,
-    //   wrap: true,
-    //   width: '200px', // Set a specific width for the column
-    //   style: {
-    //     color: '#0D7A68',
-    //   },
-    // },
-    // {
-    //   name: 'ພະແນກ',
-    //   selector: row => row.employees.data[0]?.attributes.name,
-    //   sortable: true,
-    //   wrap: true,
-    //   width: '200px', // Set a specific width for the column
-    //   style: {
-    //     color: '#0D7A68',
-    //   },
-    // },
+    {
+      name: 'ຕຳແໜ່ງ',
+      selector: row => row.role_1?.data?.attributes?.status || 'N/A',
+      sortable: true,
+      wrap: true,
+      width: '200px', // Set a specific width for the column
+      style: {
+        color: '#0D7A68',
+      },
+    },
+    {
+      name: 'ພະແນກ',
+      selector: row => row.employees.data[0]?.attributes.name,
+      sortable: true,
+      wrap: true,
+      width: '200px', // Set a specific width for the column
+      style: {
+        color: '#0D7A68',
+      },
+    },
     {
       name: '',
       cell: row => (

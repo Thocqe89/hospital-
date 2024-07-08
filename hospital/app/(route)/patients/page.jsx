@@ -1,14 +1,14 @@
 "use client";
 import React, { useEffect, useState } from 'react';
-import GlobalApi from '@/app/_utils/GlobalApi'; // Import GlobalApi
+import GlobalApi from '@/app/_utils/GlobalApi';
 import styled from 'styled-components';
 import { Button } from 'flowbite-react';
 import DataTable from 'react-data-table-component';
-import { FolderOutput, Paperclip, PencilIcon, Sparkles, TicketCheck, UserRoundPlus } from 'lucide-react';
+import { FolderOutput, PencilIcon, TicketCheck, UserRoundPlus } from 'lucide-react';
 import Link from 'next/link';
-import { Pencil } from 'lucide';
 import { canAccess } from '@/lib/utils';
 import { useKindeBrowserClient } from '@kinde-oss/kinde-auth-nextjs';
+
 const TextField = styled.input`
   height: 32px;
   width: 200px;
@@ -51,8 +51,7 @@ const FilterButton = styled(Button)`
   margin-left: 6px;
 `;
 
-
-const FilterComponent = ({ filterText, onFilter, onClear ,code  }) => (
+const FilterComponent = ({ filterText, onFilter, onClear, code }) => (
   <FilterComponentContainer>
     <TextField
       id="search"
@@ -61,32 +60,29 @@ const FilterComponent = ({ filterText, onFilter, onClear ,code  }) => (
       aria-label="Search Input"
       value={filterText}
       onChange={onFilter}
-      
     />
-    
-
-{code&&canAccess("bookq",code)&&<Link href="patients/add" passHref> 
-      <FilterButton>
-        <div className="flex items-center space-x-2">
-          <UserRoundPlus className="h-5 w-5" />
-          <span>ເພີ່ມຂໍ້ມູນຄົນເຈັບ</span>
-        </div>
-      </FilterButton>
-    </Link>}
-    {code &&canAccess("patientsQ",code)&&<Link href="/search/ພະເເນກຄົນເຈັບສຸກເສີນ" legacyBehavior>
-      <FilterButton>
-        <div className="flex items-center space-x-2">
-        <TicketCheck className="h-5 w-5" />
-                    <span>ຈອງຄິວ</span>
-        </div>
-      </FilterButton>
-    </Link>}
-
+    {code && canAccess("patientsQ", code) && (
+      <Link href="patients/add" passHref>
+        <FilterButton>
+          <div className="flex items-center space-x-2">
+            <UserRoundPlus className="h-5 w-5" />
+            <span>ເພີ່ມຂໍ້ມູນຄົນເຈັບ</span>
+          </div>
+        </FilterButton>
+      </Link>
+    )}
+    {code && canAccess("b", code) && (
+      <Link href="/search/ພະເເນກຄົນເຈັບສຸກເສີນ" legacyBehavior>
+        <FilterButton>
+          <div className="flex items-center space-x-2">
+            <TicketCheck className="h-5 w-5" />
+            <span>ຈອງຄິວ</span>
+          </div>
+        </FilterButton>
+      </Link>
+    )}
   </FilterComponentContainer>
-  
 );
-
-
 
 const handleEdit = (row) => {
   console.log('Edit button clicked for row:', row);
@@ -98,25 +94,22 @@ const Filtering = () => {
   const [patients, setPatients] = useState([]);
   const { user } = useKindeBrowserClient();
   const [emailData, setEmailData] = useState(null);
-  console.log(user)
+
   useEffect(() => {
     if (user && user.email) {
-      // Fetch email data from the API when the component mounts
       GlobalApi.getEmail(user.email)
         .then(response => {
-          console.log('API Response:', response); // Log the entire response object
-          const emailList = response.data.data
-          // console.log(emailList)
-          const foundEmail = emailList.find(item => item.attributes.email
-            === user.email);
-            console.log(foundEmail)
+          console.log('API Response:', response);
+          const emailList = response.data.data;
+          const foundEmail = emailList.find(item => item.attributes.email === user.email);
           setEmailData(foundEmail);
         })
         .catch(error => {
           console.error('Error fetching email:', error);
         });
     }
-  }, [user]); 
+  }, [user]);
+
   useEffect(() => {
     GlobalApi.getPatiented()
       .then(response => {
@@ -136,7 +129,7 @@ const Filtering = () => {
       searchRegex.test(identify_familybook_passport) ||
       searchRegex.test(phone_number)
     );
-  }).map(patient =>({... patient.attributes,id:patient.id}));
+  }).map(patient => ({ ...patient.attributes, id: patient.id }));
 
   const subHeaderComponentMemo = React.useMemo(() => {
     const handleClear = () => {
@@ -147,10 +140,10 @@ const Filtering = () => {
     };
 
     return (
-      <FilterComponent code ={emailData &&emailData.attributes.role_1.data.attributes.code} onFilter={e => setFilterText(e.target.value)} onClear={handleClear} filterText={filterText} />
-      
+      <FilterComponent code={emailData && emailData.attributes.role_1.data.attributes.code} onFilter={e => setFilterText(e.target.value)} onClear={handleClear} filterText={filterText} />
     );
-  }, [filterText, resetPaginationToggle]);
+  }, [filterText, resetPaginationToggle, emailData]);
+
   const columns = [
     {
       name: 'ຊື້',
@@ -288,49 +281,29 @@ const Filtering = () => {
         color: '#0D7A68',
       },
     },
-    // {
-    //   name: 'ລາຄາທັງມົດ',
-    //   selector: row => `${row.prayment_amount} K`,
-    //   sortable: true,
-    //   style: {
-    //     color: '#0D7A68',
-    //     fontWeight: 'bold',
-    //   },
-    // },
-   
-    // Check if user is undefined or null
-   
     {
       name: '',
       cell: row => (
         <>
-                 {emailData &&canAccess("patientsEdit",emailData.attributes.role_1.data.attributes.code)&&<Link href={`/patients/${row.id}`} passHref>
-            <Button
-              onClick={() => handleEdit(row)}
-              style={{ backgroundColor: 'transparent', color: '#0D7A68', border: 'none', padding: '0', cursor: 'hover' }}
-            >
-              <PencilIcon className="group-hover:text-red-500 group-hover:scale-125 transition-transform duration-200" size={22} />
-            </Button>
-          </Link> }
-           {/* {canAccess("patientsEdit",'002')&& <Link href={`/patients/${row.id}`} passHref></Link> */}
-        {/* {canAccess("patientsEdit",'002')&& <Link href={`/patients/${row.id}`} passHref>
-            <Button
-              onClick={() => handleEdit(row)}
-              style={{ backgroundColor: 'transparent', color: '#0D7A68', border: 'none', padding: '0', cursor: 'hover' }}
-            >
-              <PencilIcon className="group-hover:text-red-500 group-hover:scale-125 transition-transform duration-200" size={22} />
-            </Button>
-          </Link>} */}
-          {/* {canAccess('patients',) &&<Link href={`/patients/cases/${row.id}`} passHref> */}
-          {emailData &&canAccess("patientsEdit",emailData.attributes.role_1.data.attributes.code)&&<Link href={`/patients/cases/${row.id}`} passHref>
-            <Button
-              style={{ backgroundColor: 'transparent', color: '#0D7A68', border: 'none', padding: '0', cursor: 'hover' }}
-              
-            >
-             <FolderOutput className="group-hover:text-red-500 group-hover:scale-125 transition-transform duration-200" size={22} />
-            </Button>
-          </Link> }
-          
+          {emailData && canAccess("patientsEdit", emailData.attributes.role_1.data.attributes.code) && (
+            <Link href={`/patients/${row.id}`} passHref>
+              <Button
+                onClick={() => handleEdit(row)}
+                style={{ backgroundColor: 'transparent', color: '#0D7A68', border: 'none', padding: '0', cursor: 'hover' }}
+              >
+                <PencilIcon className="group-hover:text-red-500 group-hover:scale-125 transition-transform duration-200" size={22} />
+              </Button>
+            </Link>
+          )}
+          {emailData && canAccess("patientsEdit", emailData.attributes.role_1.data.attributes.code) && (
+            <Link href={`/patients/cases/${row.id}`} passHref>
+              <Button
+                style={{ backgroundColor: 'transparent', color: '#0D7A68', border: 'none', padding: '0', cursor: 'hover' }}
+              >
+                <FolderOutput className="group-hover:text-red-500 group-hover:scale-125 transition-transform duration-200" size={22} />
+              </Button>
+            </Link>
+          )}
         </>
       ),
       ignoreRowClick: true,

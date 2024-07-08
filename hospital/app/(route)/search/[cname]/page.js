@@ -1,34 +1,39 @@
 "use client";
 import React, { useEffect, useState } from 'react';
-import CategoryList from '../_components/CategoryList';
+
 import GlobalApi from '@/app/_utils/GlobalApi';
-import Doctorlist from '@/app/_conponents/Doctorlist';
+// import doctorlist from '@/app/_conponents/Doctorlist';
+// import doctorlist from '@/app/_conponents/Doctorlist';
+import Doctorlist from '@/app/_conponents/Doctorlist'; // Ensure this matches the actual path
+
+
 import { usePathname } from 'next/navigation';
+import CategoryList from '../_components/CategoryList';
+
 
 function Search() {
   const params = usePathname();
   const category = params.split('/')[2];
 
-  const [doctorlist, setDocterlist] = useState([]);
+  const [doctorlist, setDoctorlist] = useState([]);
 
   useEffect(() => {
-    if (category) { getDoctors(); }
-  }, [category]);
+    const getDoctors = () => {
+      GlobalApi.getDoctorByCategory(category).then(resp => {
+        setDoctorlist(resp.data.data);
+      });
+    };
 
-  const getDoctors = () => {
-    GlobalApi.getDoctorByCategory(category).then(resp => {
-      setDocterlist(resp.data.data);
-    });
-  };
+    if (CategoryList) {
+      getDoctors();
+    }
+  }, []);
 
   return (
-    <div className='mt-5 '
-      // style={{ backgroundImage: 'url("/82.jpg")', backgroundSize: 'cover', backgroundPosition: 'center', backgroundRepeat: 'no-repeat' }}
-    >
+    <div className='mt-5'>
       <Doctorlist heading={decodeURIComponent(category)} doctorlist={doctorlist} />
     </div>
   );
-
 }
 
 export default Search;

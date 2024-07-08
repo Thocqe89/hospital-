@@ -1,6 +1,7 @@
 "use client"
 import React from 'react'
 import CategoryList from './_components/CategoryList'
+import Doctorlist from '@/app/_conponents/Doctorlist';
 
 function layout({children}) {
   return (

@@ -77,56 +77,56 @@ function Add() {
 
         <form onSubmit={handleSubmit} className="space-y-1 text-primary">
 
-          <div class="grid gap-3 mb-2 md:grid-cols-2"> {/* Increased gap from 6 to 8 */}
+          <div className="grid gap-3 mb-2 md:grid-cols-2"> {/* Increased gap from 6 to 8 */}
             <h2 className='text-md mt-3 flex gap-1 text-primary '>
               <CircleUserRound className="text-primary" /> ຊື້
             </h2>
-            <Input type="text" id="first_name" name="first_name" placeholder="ຕັອກກີ່" onChange={handleChange} />
+            <Input type="text" id="first_name" name="first_name" placeholder="" onChange={handleChange} />
 
             <h2 className='text-md flex gap-2 text-primary '>
               <Users className="text-primary" /> ນາມສະກຸນ
             </h2>
-            <Input type="text" id="last_name" name="last_name" placeholder="ໄຊຍະກອນ" onChange={handleChange} />
+            <Input type="text" id="last_name" name="last_name" placeholder="" onChange={handleChange} />
 
             <h2 className='text-md flex gap-2 text-primary '>
               <SquareUserRound className="text-primary" /> ເພດ
             </h2>
-            <Input type="text" id="gender" name="gender" placeholder="ຊາຍ" onChange={handleChange} />
+            <Input type="text" id="gender" name="gender" placeholder="" onChange={handleChange} />
 
             <h2 className='text-md flex gap-2 text-primary '>
               <PhoneCall className="text-primary" /> ເບີຕິດຕໍ່
             </h2>
-            <Input type="text" id="phone_number" name="phone_number" placeholder="2055058028" onChange={handleChange} />
+            <Input type="text" id="phone_number" name="phone_number" placeholder="" onChange={handleChange} />
 
             <h2 className='text-md flex gap-2 text-primary '>
               <LucideHome className="text-primary" /> ບ້ານ
             </h2>
-            <Input type="text" id="village" name="village" placeholder="ໜອງບົວທອງ" onChange={handleChange} />
+            <Input type="text" id="village" name="village" placeholder="" onChange={handleChange} />
 
             <h2 className='text-md flex gap-2 text-primary '>
               <School2 className="text-primary" /> ເມືອງ
             </h2>
-            <Input type="text" id="district" name="district" placeholder="ສີໂຄດຕະບອງ" onChange={handleChange} />
+            <Input type="text" id="district" name="district" placeholder="" onChange={handleChange} />
 
             <h2 className='text-md flex gap-2 text-primary '>
               <Hotel className="text-primary" /> ແຂວງ
             </h2>
-            <Input type="text" id="province" name="province" placeholder="ນະຄອນຫຼວງວຽງຈັນ" onChange={handleChange} />
+            <Input type="text" id="province" name="province" placeholder="" onChange={handleChange} />
 
             <h2 className='text-md flex gap-2 text-primary '>
               <Earth className="text-primary" /> ປະເທດ
             </h2>
-            <Input type="text" id="country" name="country" placeholder="ລາວ" onChange={handleChange} />
+            <Input type="text" id="country" name="country" placeholder="" onChange={handleChange} />
 
             <h2 className='text-md flex gap-2 text-primary '>
               <UserRoundSearch className="text-primary" /> ຊື້ຜູ້ທີ່ສາຕິດຕໍ່ສຸກເສີນ
             </h2>
-            <Input type="text" id="emergency_name" name="emergency_name" placeholder="ໄຊຍະລາດ" onChange={handleChange} />
+            <Input type="text" id="emergency_name" name="emergency_name" placeholder="" onChange={handleChange} />
 
             <h2 className='text-md flex gap-2 text-primary '>
               <PhoneForwarded className="text-primary" /> ເບີຕິດຕໍ່ຜູ້ທີ່ສາຕິດຕໍ່ສຸກເສີນ
             </h2>
-            <Input type="text" id="emergency_phone_number" name="emergency_phone_number" placeholder="2055058028" onChange={handleChange} />
+            <Input type="text" id="emergency_phone_number" name="emergency_phone_number" placeholder="" onChange={handleChange} />
 
             <h2 className='text-md flex gap-2 text-primary '>
               <CalendarDays className="text-primary" /> ວັນ/ເດືອນ/ປີເກິດ
@@ -136,7 +136,7 @@ function Add() {
             <h2 className='text-md flex gap-2 text-primary '>
               <ShieldCheck className="text-primary" /> ຊື່ປະກັນໄພ
             </h2>
-            <Input type="text" id="insurance_name" name="insurance_name" placeholder="ວຽງຈັນປະກັນໄພ" onChange={handleChange} />
+            <Input type="text" id="insurance_name" name="insurance_name" placeholder="" onChange={handleChange} />
 
             <h2 className='text-md flex gap-2 text-primary '>
               <CalendarPlus className="text-primary" /> ວັນທີ່ເລີ່ມປະກັນໄພ
@@ -151,12 +151,12 @@ function Add() {
             <h2 className='text-md flex gap-2 text-primary '>
               <BookUser className="text-primary" /> ເອກະສານຍືນຍັນຕົວຕົນ
             </h2>
-            <Input type="text" id="identify_familybook_passport" name="identify_familybook_passport" placeholder="P12345678" onChange={handleChange} />
+            <Input type="text" id="identify_familybook_passport" name="identify_familybook_passport" placeholder="" onChange={handleChange} />
 
             <h2 className='text-md flex gap-2 text-primary '>
               <Radiation className="text-primary" /> ໂລກປະຈຳຕົວ ແລະ ອາການແພ້
             </h2>
-            <Input type="text" id="disease_diagnoses" name="disease_diagnoses" placeholder="ແພ້ຍາ" onChange={handleChange} />
+            <Input type="text" id="disease_diagnoses" name="disease_diagnoses" placeholder="" onChange={handleChange} />
 
             {/* <h2 className='text-md flex gap-2 text-primary '>
               <Banknote className="text-primary" /> ຈຳນວນເງີນ
@@ -179,6 +179,14 @@ function Add() {
                 <span>ບັນທຶກ</span>
               </div>
             </Button>
+            <Link href={`/patients/`} passHref>
+              <Button
+                onClick={() => handleEdit(row)}
+                style={{ backgroundColor: 'transparent', color: '#0D7A68', border: 'none', padding: '0', cursor: 'hover' }}
+              >
+                <PencilIcon className="group-hover:text-red-500 group-hover:scale-125 transition-transform duration-200" size={22} />
+              </Button>
+            </Link>
             <Link href="/search/ພະເເນກຄົນເຈັບສຸກເສີນ" legacyBehavior>
               <a>
                 <Button className="text-primary text-white px-4 py-2 rounded-md">

@@ -238,7 +238,7 @@ const Filtering = () => {
       medical_detail: caseItem.attributes.medical_detail,
       updatedAt: caseItem.attributes.updatedAt,
       createdAt: caseItem.attributes.createdAt,
-      prayment_amount: payment?.data?.attributes?.prayment_amount || '',
+      prayment_amount: caseItem?.attributes?.prayment_amount || '',
 
     };
   });
@@ -304,15 +304,15 @@ const Filtering = () => {
         color: '#0D7A68',
       },
     },
-    {
-      name: 'ທ່ານໝໍ',
-      selector: row => row.userName,
-      sortable: true,
-      style: {
-        color: '#0D7A68',
-        textAlign: 'center',
-      },
-    },
+    // {
+    //   name: 'ທ່ານໝໍ',
+    //   selector: row => row.first_name,
+    //   sortable: true,
+    //   style: {
+    //     color: '#0D7A68',
+    //     textAlign: 'center',
+    //   },
+    // },
     {
       name: 'ລວມລາຍຈ່າຍ',
       selector: row => row.prayment_amount,
@@ -320,6 +320,7 @@ const Filtering = () => {
       style: {
         color: '#0D7A68',
         textAlign: 'center',
+        fontWeight: 'bold', // Make the text bold
       },
     },
     {

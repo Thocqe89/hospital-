@@ -2,6 +2,8 @@
 import React from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
+import doctorlist from '@/app/_conponents/Doctorlist';
+
 
 function Doctorlist({ doctorlist, heading = "ທານໝໍ" }) {
   console.log(doctorlist);

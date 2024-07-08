@@ -181,7 +181,7 @@ function EditPatient({ params }) {
             <Input type="text" id="identify_familybook_passport" name="identify_familybook_passport" value={patientData.identify_familybook_passport} onChange={handleChange} />
 
             <h2 className='text-md flex gap-2 text-primary '>
-              <Radiation className="text-primary" /> ພະຍາດທີ່ເປັນແລ້ວ
+              <Radiation className="text-primary" /> ໂລກປະຈຳຕົວ ແລະ ອາການແພ້
             </h2>
             <Input type="text" id="disease_diagnoses" name="disease_diagnoses" value={patientData.disease_diagnoses} onChange={handleChange} />
 

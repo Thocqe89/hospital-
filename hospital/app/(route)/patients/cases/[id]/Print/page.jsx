@@ -264,12 +264,12 @@ const PrintPage = () => {
 
                 <h2 className=" text-gray-500">
 
-                  <br class="mb-2" />
+                  <br className="mb-2" />
                   ຖະນົນ ກຳແພງເມືອງ ບ້ານດອນກອຍ ເມືອງໄຊເສດຖາ ນະຄອນຫຼວງວຽງຈັນ
-                  <br class="mb-2" />
+                  <br className="mb-2" />
 
                   ອີເມວ : hospitalsetthathirath@gmail.com
-                  <br class="mb-2" />
+                  <br className="mb-2" />
                   ເບີ :030 5725978
 
                 </h2>

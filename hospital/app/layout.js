@@ -1,3 +1,4 @@
+
 import { Noto_Sans_Lao_Looped } from "next/font/google";
 import "./globals.css";
 import Header from "./_conponents/Header";

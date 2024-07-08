@@ -9,6 +9,7 @@ const roles = {
   "approve": ['001'],
   "newpatients": ['001','001', '003'],
   "bookq": ['001', '003'],
+  "b": ['001', '003'],
  
   "patientsEdit": ['001', '003', '002'],
   "patientsQ": ['001', '003'],

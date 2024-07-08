@@ -111,77 +111,77 @@ function EditUser({ params }) {
                 <form onSubmit={handleSubmit} className="space-y-2 text-primary">
                     <div className="grid gap-3 mb-2 md:grid-cols-2">
                         <h2 className='text-md mt-3 flex gap-1 text-primary '>
-                            <CircleUserRound className="text-primary" /> First Name
+                            <CircleUserRound className="text-primary" /> ຊື່
                         </h2>
                         <Input type="text" id="first_name" name="first_name" value={userData.first_name} onChange={handleChange} />
 
                         <h2 className='text-md flex gap-2 text-primary '>
-                            <Users className="text-primary" /> Last Name
+                            <Users className="text-primary" /> ນາມສະກຸນ
                         </h2>
                         <Input type="text" id="last_name" name="last_name" value={userData.last_name} onChange={handleChange} />
 
                         <h2 className='text-md flex gap-2 text-primary '>
-                            Gender
+                            ເພດ
                         </h2>
                         <Input type="text" id="gender" name="gender" value={userData.gender} onChange={handleChange} />
 
                         <h2 className='text-md flex gap-2 text-primary '>
-                            Phone Number
+                            ເບີຕິດຕໍ່
                         </h2>
                         <Input type="text" id="phone_number" name="phone_number" value={userData.phone_number} onChange={handleChange} />
 
                         <h2 className='text-md flex gap-2 text-primary '>
-                            Village
+                            ບ້ານ
                         </h2>
                         <Input type="text" id="village" name="village" value={userData.village} onChange={handleChange} />
 
                         <h2 className='text-md flex gap-2 text-primary '>
-                            District
+                            ເມືອງ
                         </h2>
                         <Input type="text" id="district" name="district" value={userData.district} onChange={handleChange} />
 
                         <h2 className='text-md flex gap-2 text-primary '>
-                            Province
+                            ແຂວງ
                         </h2>
                         <Input type="text" id="province" name="province" value={userData.province} onChange={handleChange} />
 
                         <h2 className='text-md flex gap-2 text-primary '>
-                            Country
+                            ປະເທດ
                         </h2>
                         <Input type="text" id="country" name="country" value={userData.country} onChange={handleChange} />
 
                         <h2 className='text-md flex gap-2 text-primary '>
-                            Email
+                            ອີເມວ
                         </h2>
                         <Input type="email" id="email" name="email" value={userData.email} onChange={handleChange} />
 
                         <h2 className='text-md flex gap-2 text-primary '>
-                            Password
+                            ລະຫັດຜ່ານ
                         </h2>
                         <Input type="text" id="password" name="password" value={userData.password} onChange={handleChange} />
 
                         <h2 className='text-md flex gap-2 text-primary '>
-                            Date of Birth
+                            ວັນ/ເດືອນ/ປີເກີດ
                         </h2>
                         <Input type="date" id="date_of_birth" name="date_of_birth" value={userData.date_of_birth} onChange={handleChange} />
 
                         <h2 className='text-md flex gap-2 text-primary '>
-                            Experience Year
+                            ປະສົບການ
                         </h2>
                         <Input type="text" id="experience_year" name="experience_year" value={userData.experience_year} onChange={handleChange} />
 
                         <h2 className='text-md flex gap-2 text-primary '>
-                            Graduation At
+                            ຈົບຈາກ
                         </h2>
                         <Input type="text" id="graduation_at" name="graduation_at" value={userData.graduation_at} onChange={handleChange} />
 
                         <h2 className='text-md flex gap-2 text-primary '>
-                            Graduation Date
+                            ວັນ/ເດືອນ/ປີຈົບ
                         </h2>
                         <Input type="date" id="graduation_date" name="graduation_date" value={userData.graduation_date} onChange={handleChange} />
 
                         <h2 className='text-md flex gap-2 text-primary '>
-                            Employees
+                            ພະນັກງານ
                         </h2>
                         <select id="employees" name="employees" value={userData.employees} onChange={handleChange} className="input input-bordered">
                             <option value="">ເລືອກພະແນກ</option>
@@ -191,7 +191,7 @@ function EditUser({ params }) {
                         </select>
 
                         <h2 className='text-md flex gap-2 text-primary '>
-                            Role
+                        ຕຳແໜ່ງ
                         </h2>
                         <select id="role_1" name="role_1" value={userData.role_1} onChange={handleChange} className="input input-bordered">
                             <option value="">ເລືອກຕຳແໜ່ງ</option>

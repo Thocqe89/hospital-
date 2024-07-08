@@ -3,6 +3,7 @@ import React, { PureComponent } from 'react';
 import { PieChart, Pie, Sector, ResponsiveContainer, Tooltip, Legend, Cell, BarChart, CartesianGrid, XAxis, YAxis, Bar } from 'recharts';
 import GlobalApi from '@/app/_utils/GlobalApi';
 import { Users, ScrollText } from 'lucide-react';
+// import Filtering from "./_conponents/Dashboard";
 
 class Dashboard extends PureComponent {
   constructor(props) {
@@ -72,7 +73,7 @@ class Dashboard extends PureComponent {
     return monthlyData;
   }
 
-  COLORS = ['#040404','#E37006','#0D7A68' ,'#0D7A68'  ];
+  COLORS = ['#040404','#0D7A68' ,'#024A92'  ];
 
   onPieEnter = (_, index) => {
     this.setState({ activeIndex: index });

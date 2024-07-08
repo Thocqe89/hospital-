@@ -17,11 +17,11 @@ function footer() {
 
         <h2 className="mx-auto mt-6 max-w-md text-center leading-relaxed text-gray-500">
         ໂຮງຫມໍ ເສດຖາທິຣາດ
-          <br class="mb-2" />
+          <br className="mb-2" />
           ຖະນົນ ກຳແພງເມືອງ ບ້ານດອນກອຍ ເມືອງໄຊເສດຖາ ນະຄອນຫຼວງວຽງຈັນ
-          <br class="mb-2" />
+          <br className="mb-2" />
           ເບີ :030 5725978
-          <br class="mb-2" />
+          <br className="mb-2" />
           Mail : hospitalsetthathirath@gmail.com 
         </h2>
         {/* <Link href='https://maps.app.goo.gl/dHXmWUFUTacNHDAt5'>
